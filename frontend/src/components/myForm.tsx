@@ -1,25 +1,38 @@
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
 import { socket } from '../socket';
 
 export function MyForm() {
-  const [value, setValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [input, setInput] = useState('');
+  const [user, setUser] = useState('');
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
     setIsLoading(true);
-
-    socket.emit('create-something', value, () => {
+    if (input && user) {
+      const formattedMessage = `${user}: ${input}`;
+      socket.emit('chat message', formattedMessage); // Emit the composed message directly
+      setInput('');
       setIsLoading(false);
-    });
-  }
+    }
+  };
 
   return (
-    <form onSubmit={onSubmit}>
-      <input onChange={(e) => setValue(e.target.value)} />
-
+    <form id='form' onSubmit={handleSubmit}>
+      <input
+        id='user'
+        value={user}
+        onChange={(e) => setUser(e.target.value)}
+        autoComplete='off'
+      />
+      <input
+        id='input'
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        autoComplete='off'
+      />
       <button type='submit' disabled={isLoading}>
-        Submit
+        Send
       </button>
     </form>
   );

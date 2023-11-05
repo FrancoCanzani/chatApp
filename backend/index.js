@@ -20,19 +20,22 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-let status;
-
 io.on('connection', (socket) => {
   console.log('a user connected');
-  status = 'A user connected';
   socket.on('disconnect', () => {
     console.log('user disconnected');
-    status = 'A user disconnected';
+  });
+});
+
+io.on('connection', (socket) => {
+  socket.on('chat message', (msg) => {
+    io.emit('chat message', msg);
+    console.log(msg);
   });
 });
 
 app.get('/', (req, res) => {
-  res.json(status);
+  res.json('Server listening');
 });
 
 // Error handling middleware

@@ -3,25 +3,31 @@ import { socket } from './socket';
 import { ConnectionState } from './components/connectionState';
 import { ConnectionManager } from './components/connectionManager';
 import { MyForm } from './components/myForm';
+import { Messages } from './components/messages';
 
 export default function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    function onConnect() {
+    socket.on('connect', () => {
       setIsConnected(true);
-    }
+    });
 
-    function onDisconnect() {
+    socket.on('disconnect', () => {
       setIsConnected(false);
-    }
+    });
 
-    socket.on('connect', onConnect);
-    socket.on('disconnect', onDisconnect);
+    // Listening for chat message event from the server
+    socket.on('chat message', (msg: string) => {
+      setMessages((prevMessages) => [...prevMessages, msg]);
+    });
 
+    // Clean up the effect
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
+      socket.off('connect');
+      socket.off('disconnect');
+      socket.off('chat message');
     };
   }, []);
 
@@ -30,6 +36,7 @@ export default function App() {
       <ConnectionState isConnected={isConnected} />
       <ConnectionManager />
       <MyForm />
+      <Messages messages={messages} />
     </div>
   );
 }
