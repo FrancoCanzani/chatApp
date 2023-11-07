@@ -7,7 +7,7 @@ import { createServer } from 'http';
 
 const app = express();
 const httpServer = createServer(app);
-// In your backend server configuration
+
 const io = new Server(httpServer, {
   cors: {
     origin: ['http://localhost:3000', 'http://localhost:5173'], // Vite dev server port here
@@ -22,20 +22,23 @@ app.use(express.json());
 
 io.on('connection', (socket) => {
   console.log('a user connected');
+
+  // Handle when the user disconnects
   socket.on('disconnect', () => {
     console.log('user disconnected');
   });
-});
 
-io.on('connection', (socket) => {
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
-    console.log(msg);
+  // Server-side code to handle joining a room
+  socket.on('joinRoom', ({ roomName }) => {
+    socket.join(roomName);
   });
-});
 
-app.get('/', (req, res) => {
-  res.json('Server listening');
+  // Server-side code to emit a message to a room
+  socket.on('messageToRoom', ({ roomName, message }) => {
+    socket.to(roomName).emit('messageToRoom', message);
+  });
+
+  // ... any other event listeners related to this socket
 });
 
 // Error handling middleware
