@@ -10,7 +10,7 @@ const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'http://localhost:3001'], // Vite dev server port here
+    origin: ['http://localhost:3000', 'http://localhost:3001'], // ports here
     methods: ['GET', 'POST'],
   },
 });
@@ -33,12 +33,15 @@ io.on('connection', (socket) => {
     socket.join(roomName);
   });
 
+  // Server-side code to handle leaving a room
+  socket.on('leaveRoom', ({ roomName }) => {
+    socket.leave(roomName);
+  });
+
   // Server-side code to emit a message to a room
   socket.on('messageToRoom', ({ roomName, message }) => {
     socket.to(roomName).emit('messageToRoom', message);
   });
-
-  // ... any other event listeners related to this socket
 });
 
 // Error handling middleware
@@ -49,7 +52,4 @@ app.use((error, req, res, next) => {
   });
 });
 
-const port = process.env.PORT || 3000;
-httpServer.listen(port, () => {
-  console.log(`server running at http://localhost:${port}`);
-});
+export { httpServer, app, io };

@@ -4,12 +4,12 @@ import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Button from './button';
 import { useState } from 'react';
 export default function UserSettings({
-  room,
-  setRoom,
+  currentRoom,
+  setCurrentRoom,
   setRooms,
 }: {
-  room: string;
-  setRoom: Dispatch<SetStateAction<string>>;
+  currentRoom: string;
+  setCurrentRoom: Dispatch<SetStateAction<string>>;
   setRooms: Dispatch<SetStateAction<string[]>>;
 }) {
   const [input, setInput] = useState('');

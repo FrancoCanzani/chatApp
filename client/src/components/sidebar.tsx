@@ -1,46 +1,52 @@
 'use client';
 
-import { useEffect, useState, Dispatch, SetStateAction } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 import { socket } from '../socket';
 import { ConnectionState } from './connectionState';
 // import { Menu } from 'lucide-react';
 import UserSettings from './userSettings';
 import { User } from '@firebase/auth';
 import Image from 'next/image';
+import { cn } from '@/utils/cn';
+import Button from './button';
 
 export function Sidebar({
-  room,
-  setRoom,
+  currentRoom,
+  setCurrentRoom,
   user,
 }: {
-  room: string;
-  setRoom: Dispatch<SetStateAction<string>>;
+  currentRoom: string;
+  setCurrentRoom: Dispatch<SetStateAction<string>>;
   user: User | null | undefined;
 }) {
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
   const [showSidebar, setShowSidebar] = useState(true);
-  const [rooms, setRooms] = useState<(typeof room)[]>([]);
-
-  useEffect(() => {
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
-
-    // Clean up the effect
-    return () => {
-      socket.off('connect');
-      socket.off('disconnect');
-    };
-  }, []);
+  const [rooms, setRooms] = useState<(typeof currentRoom)[]>([]);
 
   function handleJoinRoom(roomId: string) {
     if (roomId) {
-      socket.emit('joinRoom', { roomName: roomId });
-      setRoom(roomId);
+      socket.emit('joinRoom', {
+        roomName: roomId,
+        user: {
+          id: user?.uid,
+          name: user?.displayName,
+        },
+      });
+      setCurrentRoom(roomId);
+    }
+  }
+
+  function handleLeaveRoom(roomId: string) {
+    if (roomId) {
+      socket.emit('leaveRoom', {
+        roomName: roomId,
+        user: {
+          id: user?.uid,
+          name: user?.displayName,
+        },
+      });
+      setCurrentRoom('');
+      setRooms(rooms.filter((room) => room == roomId));
     }
   }
 
@@ -53,7 +59,7 @@ export function Sidebar({
       <div className='flex items-center justify-between p-2 rounded-lg bg-gray-100 w-full'>
         <div className='p-2 rounded-lg flex items-center justify-center gap-2'>
           <Image
-            src={user?.photoURL ?? '/client/public/default-avatar.png'}
+            src={user?.photoURL ?? '/default-avatar.png'}
             width={25}
             height={25}
             alt='profile pic'
@@ -66,19 +72,40 @@ export function Sidebar({
           setIsConnected={setIsConnected}
         />
       </div>
-      <UserSettings setRoom={setRoom} room={room} setRooms={setRooms} />
+      <UserSettings
+        setCurrentRoom={setCurrentRoom}
+        currentRoom={currentRoom}
+        setRooms={setRooms}
+      />
       <div className='bg-yellow-100 flex flex-col p-2 rounded-lg h-full'>
         <h2 className='text-lg p-1 font-semibold'>Rooms</h2>
-        <nav className='flex flex-1 flex-col gap-y-2 justify-start w-full items-start'>
+        <ul className='flex flex-1 flex-col gap-y-2 justify-start w-full items-start'>
           {rooms.map((room) => (
-            <button
-              onClick={() => handleJoinRoom(room)}
-              className='bg-blue-200 hover:bg-blue-300 p-2 w-full rounded-lg text-start text-sm font-semibold'
-            >
-              {room}
-            </button>
+            <li className='bg-blue-200 hover:bg-blue-300 flex items-center justify-between p-2 w-full rounded-lg text-start text-sm font-semibold'>
+              <span>{room}</span>
+              <div className='space-x-2'>
+                <Button
+                  variant={'primary'}
+                  size={'small'}
+                  onClick={() => handleJoinRoom(room)}
+                  disabled={room == currentRoom}
+                  className={cn({
+                    'opacity-75': room == currentRoom,
+                  })}
+                >
+                  Enter chat
+                </Button>
+                <Button
+                  variant={'primary'}
+                  size={'small'}
+                  onClick={() => handleLeaveRoom(currentRoom)}
+                >
+                  Leave room
+                </Button>
+              </div>
+            </li>
           ))}
-        </nav>
+        </ul>
       </div>
     </aside>
   );

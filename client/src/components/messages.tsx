@@ -4,16 +4,18 @@ import { message } from '@/utils/types';
 export function Messages({
   messages,
   user,
-  room,
+  currentRoom,
 }: {
   messages: message[];
   user: User | null | undefined;
-  room: string;
+  currentRoom: string;
 }) {
   console.log(messages);
   console.log(user);
 
-  const roomMessages = messages.filter((message) => message.room == room);
+  const roomMessages = messages.filter(
+    (message) => message.room == currentRoom
+  );
 
   return (
     <ul className='pb-9 w-4/5'>

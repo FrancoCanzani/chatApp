@@ -15,7 +15,7 @@ import Footer from '@/components/footer';
 export default function App() {
   const auth = getAuth(app);
   const [messages, setMessages] = useState<message[]>([]);
-  const [room, setRoom] = useState('');
+  const [currentRoom, setCurrentRoom] = useState('');
   const [user, loading, error] = useAuthState(auth);
 
   useEffect(() => {
@@ -34,10 +34,18 @@ export default function App() {
     <div className='flex flex-col h-screen w-screen bg-softBlue dark:bg-zinc-900'>
       <Header user={user} />
       <div className='flex flex-1 overflow-hidden'>
-        <Sidebar room={room} setRoom={setRoom} user={user} />
-        <main className='flex-1 bg-blue-50 w-full flex justify-between items-center flex-col overflow-auto py-4 px-6'>
-          <Messages messages={messages} user={user} room={room} />
-          <ChatForm setMessages={setMessages} user={user} room={room} />
+        <Sidebar
+          currentRoom={currentRoom}
+          setCurrentRoom={setCurrentRoom}
+          user={user}
+        />
+        <main className='flex-1 bg-blue-50 w-full flex justify-between m-6 rounded-md items-center flex-col overflow-auto py-4 px-6'>
+          <Messages messages={messages} user={user} currentRoom={currentRoom} />
+          <ChatForm
+            setMessages={setMessages}
+            user={user}
+            currentRoom={currentRoom}
+          />
         </main>
       </div>
       <Footer />

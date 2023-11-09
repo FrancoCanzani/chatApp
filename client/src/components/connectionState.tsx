@@ -8,8 +8,8 @@ export function ConnectionState({
   isConnected,
   setIsConnected,
 }: {
-  isConnected: boolean;
-  setIsConnected: Dispatch<SetStateAction<boolean>>;
+  isConnected: boolean | null;
+  setIsConnected: Dispatch<SetStateAction<boolean | null>>;
 }) {
   function connect() {
     socket.connect();

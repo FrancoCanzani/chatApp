@@ -8,11 +8,11 @@ import { User } from '@firebase/auth';
 export function ChatForm({
   user,
   setMessages,
-  room,
+  currentRoom,
 }: {
   user: User | null | undefined;
   setMessages: Dispatch<SetStateAction<message[]>>;
-  room: string;
+  currentRoom: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
@@ -24,10 +24,10 @@ export function ChatForm({
       const message = {
         name: user?.displayName ?? 'Anonymous',
         message: input,
-        room: room,
+        room: currentRoom,
       };
       // Client-side code to join a room
-      socket.emit('messageToRoom', { roomName: room, message: message });
+      socket.emit('messageToRoom', { roomName: currentRoom, message: message });
       setMessages((prevMessages) => [...prevMessages, message]);
       setInput('');
       setIsLoading(false);
@@ -38,7 +38,7 @@ export function ChatForm({
     <form
       id='form'
       onSubmit={handleSubmit}
-      className='w-4/5 space-x-4 inset-x-0 mx-auto flex items-center justify-center'
+      className='w-full space-x-4 inset-x-0 mx-auto flex items-center justify-center'
     >
       <input
         id='input'
@@ -46,12 +46,12 @@ export function ChatForm({
         onChange={(e) => setInput(e.target.value)}
         autoComplete='off'
         placeholder='Message'
-        className='rounded-lg px-4 outline-none py-1 ring-1 ring-inset ring-gray-200'
+        className='rounded-lg w-4/5 px-4 outline-none py-3 ring-1 ring-inset ring-gray-200'
       />
       <button
         type='submit'
         disabled={isLoading}
-        className='bg-sky-200 hover:bg-sky-100 text-sm rounded-lg px-4 py-1 ring-1 ring-inset ring-gray-200'
+        className='bg-sky-200 hover:bg-sky-100 text-sm rounded-lg px-4 py-3 ring-1 ring-inset ring-gray-200'
       >
         Send
       </button>
