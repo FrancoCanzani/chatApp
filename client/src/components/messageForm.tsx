@@ -4,8 +4,9 @@ import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
 import { socket } from '../socket';
 import { message } from '@/utils/types';
 import { User } from '@firebase/auth';
+import Button from './button';
 
-export function ChatForm({
+export function MessageForm({
   user,
   setMessages,
   currentRoom,
@@ -41,20 +42,22 @@ export function ChatForm({
       className='w-full space-x-4 inset-x-0 mx-auto flex items-center justify-center'
     >
       <input
+        autoFocus
         id='input'
         value={input}
         onChange={(e) => setInput(e.target.value)}
         autoComplete='off'
         placeholder='Message'
-        className='rounded-lg w-4/5 px-4 outline-none py-3 ring-1 ring-inset ring-gray-200'
+        className='rounded-md w-4/5 px-4 outline-none py-2 ring border border-gray-200 ring-gray-50'
       />
-      <button
+      <Button
         type='submit'
         disabled={isLoading}
-        className='bg-sky-200 hover:bg-sky-100 text-sm rounded-lg px-4 py-3 ring-1 ring-inset ring-gray-200'
+        variant={'send'}
+        size={'medium'}
       >
         Send
-      </button>
+      </Button>
     </form>
   );
 }

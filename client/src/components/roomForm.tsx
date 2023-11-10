@@ -3,7 +3,8 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Button from './button';
 import { useState } from 'react';
-export default function UserSettings({
+
+export default function RoomForm({
   currentRoom,
   setCurrentRoom,
   setRooms,
@@ -25,9 +26,9 @@ export default function UserSettings({
         setRooms((prevRooms) => [...prevRooms, input]);
         setInput('');
       }}
-      className='mb-3 bg-gray-100 p-3 rounded-lg flex flex-col items-center justify-center'
+      className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'
     >
-      <h1 className='w-full text-start text-sm font-semibold mb-3'>
+      <h1 className='w-full text-start text-sm text-gray-800 font-medium mb-3'>
         Create a new room
       </h1>
       <div className='space-x-2'>
