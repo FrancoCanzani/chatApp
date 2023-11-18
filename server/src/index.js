@@ -4,14 +4,19 @@ import helmet from 'helmet';
 import cors from 'cors';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
+import { roomsRouter } from './routes/rooms.js';
+import { connectDB } from './db/connectDB.js';
+import 'dotenv/config';
 
 const app = express();
 const httpServer = createServer(app);
 
+connectDB();
+
 const io = new Server(httpServer, {
   cors: {
     origin: ['http://localhost:3000', 'http://localhost:3001'], // ports here
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PATCH'],
   },
 });
 
@@ -21,28 +26,32 @@ app.use(cors());
 app.use(express.json());
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log(`Socket ${socket.id} connected`);
 
   // Handle when the user disconnects
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log(`Socket ${socket.id} disconnected`);
   });
 
   // Server-side code to handle joining a room
-  socket.on('joinRoom', ({ roomName }) => {
-    socket.join(roomName);
+  socket.on('joinRoom', ({ roomId, user }) => {
+    socket.join(roomId);
+    console.log(`${user.name} joined room ${roomId}`);
   });
 
   // Server-side code to handle leaving a room
-  socket.on('leaveRoom', ({ roomName }) => {
-    socket.leave(roomName);
+  socket.on('leaveRoom', ({ roomId, user }) => {
+    socket.leave(roomId);
+    console.log(`${user.id} left room ${roomId}`);
   });
 
   // Server-side code to emit a message to a room
-  socket.on('messageToRoom', ({ roomName, message }) => {
-    socket.to(roomName).emit('messageToRoom', message);
+  socket.on('messageToRoom', ({ roomId, message }) => {
+    socket.to(roomId).emit('messageToRoom', message);
   });
 });
+
+app.use('/', roomsRouter);
 
 // Error handling middleware
 app.use((error, req, res, next) => {

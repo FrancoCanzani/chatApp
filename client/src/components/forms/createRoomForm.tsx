@@ -1,17 +1,18 @@
 'use client';
 
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
-import Button from './button';
+import Button from '../button';
 import { useState } from 'react';
+import { User } from 'firebase/auth';
+import handleCreateRoom from '@/utils/functions/handleCreateRoom';
+import { NewRoom, RoomType } from '@/utils/types';
 
-export default function RoomForm({
-  currentRoom,
-  setCurrentRoom,
+export default function CreateRoomForm({
   setRooms,
+  user,
 }: {
-  currentRoom: string;
-  setCurrentRoom: Dispatch<SetStateAction<string>>;
   setRooms: Dispatch<SetStateAction<string[]>>;
+  user: User | null | undefined;
 }) {
   const [input, setInput] = useState('');
 
@@ -21,10 +22,26 @@ export default function RoomForm({
 
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
-        setRooms((prevRooms) => [...prevRooms, input]);
-        setInput('');
+
+        if (user) {
+          const roomData: NewRoom = {
+            roomName: input,
+            roomId: self.crypto.randomUUID(),
+            roomType: 'private' as RoomType,
+            participants: [user?.uid],
+            administrators: [user?.uid],
+            creatorId: user?.uid,
+          };
+          const newRoom = await handleCreateRoom(roomData);
+          console.log(newRoom);
+
+          if (newRoom) {
+            setRooms((prevRooms) => [...prevRooms, roomData.roomId]);
+            setInput('');
+          }
+        }
       }}
       className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'
     >
@@ -37,7 +54,7 @@ export default function RoomForm({
           value={input}
           onChange={handleChange}
           autoComplete='off'
-          placeholder='Room id'
+          placeholder='Room name'
           className='rounded-lg w-2/3 px-2 py-1 outline-none'
         />
         <Button

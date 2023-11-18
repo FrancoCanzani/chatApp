@@ -1,18 +1,15 @@
 import { User } from '@firebase/auth';
-import { message } from '@/utils/types';
+import { Message } from '@/utils/types';
 
 export function Messages({
   messages,
   user,
   currentRoom,
 }: {
-  messages: message[];
+  messages: Message[];
   user: User | null | undefined;
   currentRoom: string;
 }) {
-  console.log(messages);
-  console.log(user);
-
   const roomMessages = messages.filter(
     (message) => message.room == currentRoom
   );

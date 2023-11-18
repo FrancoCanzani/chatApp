@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+import 'dotenv/config';
 
 const DBUri = process.env.MONGO_URI;
 
-main().catch((err) => console.log(err));
+connectDB().catch((err) => console.log(err));
 
-async function main() {
+export async function connectDB() {
   await mongoose.connect(DBUri);
 }

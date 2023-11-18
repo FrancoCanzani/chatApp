@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
-import { socket } from '../socket';
-import { message } from '@/utils/types';
+import { socket } from '../../socket';
+import { Message } from '@/utils/types';
 import { User } from '@firebase/auth';
-import Button from './button';
+import Button from '../button';
 
 export function MessageForm({
   user,
@@ -12,7 +12,7 @@ export function MessageForm({
   currentRoom,
 }: {
   user: User | null | undefined;
-  setMessages: Dispatch<SetStateAction<message[]>>;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
   currentRoom: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -28,7 +28,7 @@ export function MessageForm({
         room: currentRoom,
       };
       // Client-side code to join a room
-      socket.emit('messageToRoom', { roomName: currentRoom, message: message });
+      socket.emit('messageToRoom', { roomId: currentRoom, message: message });
       setMessages((prevMessages) => [...prevMessages, message]);
       setInput('');
       setIsLoading(false);

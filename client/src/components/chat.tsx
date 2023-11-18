@@ -1,4 +1,4 @@
-import { MessageForm } from './messageForm';
+import { MessageForm } from './forms/messageForm';
 import { Messages } from './messages';
 import { useState, useEffect } from 'react';
 import { socket } from '@/socket';
