@@ -8,10 +8,11 @@ import { getAuth } from 'firebase/auth';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Footer from '@/components/footer';
 import Chat from '@/components/chat';
+import { Room } from '@/utils/types';
 
 export default function App() {
   const auth = getAuth(app);
-  const [currentRoom, setCurrentRoom] = useState('');
+  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
   const [user, loading, error] = useAuthState(auth);
 
   return (

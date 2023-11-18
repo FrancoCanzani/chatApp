@@ -15,23 +15,23 @@ export default function Rooms({
   user: User | null | undefined;
   rooms: Room[];
   setRooms: Dispatch<SetStateAction<Room[]>>;
-  currentRoom: string;
-  setCurrentRoom: Dispatch<SetStateAction<string>>;
+  currentRoom: Room | null;
+  setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
 }) {
-  function handleJoinRoom(roomId: string) {
-    if (roomId) {
+  function handleJoinRoom(room: Room) {
+    if (room._id) {
       socket.emit('joinRoom', {
-        roomId: roomId,
+        roomId: room._id,
         user: {
           id: user?.uid,
           name: user?.displayName,
         },
       });
-      setCurrentRoom(roomId);
+      setCurrentRoom(room);
     }
   }
 
-  function handleLeaveRoom(roomId: string) {
+  function handleLeaveRoom(roomId: string | undefined) {
     if (roomId) {
       socket.emit('leaveRoom', {
         roomId: roomId,
@@ -40,7 +40,7 @@ export default function Rooms({
           name: user?.displayName,
         },
       });
-      setCurrentRoom('');
+      setCurrentRoom(null);
       // setRooms(rooms.filter((room) => room !== roomId));
     }
   }
@@ -56,10 +56,10 @@ export default function Rooms({
             <div className='flex items-center justify-between'>
               <div className='space-x-2'>
                 <Button
-                  onClick={() => handleJoinRoom(room._id)}
-                  disabled={room._id == currentRoom}
+                  onClick={() => handleJoinRoom(room)}
+                  disabled={room._id == currentRoom?._id}
                   className={cn({
-                    'opacity-75': room._id == currentRoom,
+                    'opacity-75': room._id == currentRoom?._id,
                   })}
                 >
                   Enter chat
@@ -67,7 +67,7 @@ export default function Rooms({
                 <Button
                   variant={'primary'}
                   size={'small'}
-                  onClick={() => handleLeaveRoom(currentRoom)}
+                  onClick={() => handleLeaveRoom(currentRoom?._id)}
                 >
                   Leave room
                 </Button>

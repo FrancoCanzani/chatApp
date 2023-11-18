@@ -1,7 +1,7 @@
 type Message = {
   name: string;
   message: string;
-  room: string;
+  roomId: string;
 };
 
 type RoomType = 'private' | 'group';

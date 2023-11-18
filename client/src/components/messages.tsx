@@ -1,5 +1,9 @@
+'use client';
+
 import { User } from '@firebase/auth';
-import { Message } from '@/utils/types';
+import { Message, Room } from '@/utils/types';
+import { cn } from '@/utils/functions/cn';
+import { useRef, useEffect } from 'react';
 
 export function Messages({
   messages,
@@ -8,27 +12,40 @@ export function Messages({
 }: {
   messages: Message[];
   user: User | null | undefined;
-  currentRoom: string;
+  currentRoom: Room | null;
 }) {
   const roomMessages = messages.filter(
-    (message) => message.room == currentRoom
+    (message) => message.roomId == currentRoom?._id
   );
 
+  const bottomListRef = useRef(null);
+
+  useEffect(() => {
+    if (bottomListRef.current) {
+      bottomListRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
   return (
-    <ul className='pb-9 w-4/5'>
+    <ul className='pb-2 w-full px-3 overflow-auto flex flex-col-reverse scrollbar-track scrollbar-thumb'>
       {roomMessages.map((message, index) => (
         <li
           key={index}
-          className={`flex w-full mb-1 space-x-2  py-1 rounded-lg items-center ${
+          ref={index === roomMessages.length - 1 ? bottomListRef : null}
+          className={`flex w-full items-center mb-2 ${
             user?.displayName == message.name ? 'justify-end' : 'justify-start'
           }`}
         >
-          {message.name != user?.displayName && (
-            <span className='bg-purple-100 px-2 py-0.5 rounded-lg'>
-              {message.name}
-            </span>
-          )}
-          <p>{message.message}</p>
+          <div
+            className={cn(
+              `rounded-md shadow-sm border max-w-full lg:max-w-xl px-2 py-1 flex flex-col bg-gray-50`
+            )}
+          >
+            {message.name != user?.displayName && (
+              <span className='text-xs font-semibold my-1'>{message.name}</span>
+            )}
+            <p className='text-sm'>{message.message}</p>
+          </div>
         </li>
       ))}
     </ul>

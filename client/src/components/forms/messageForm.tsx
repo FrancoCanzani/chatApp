@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
 import { socket } from '../../socket';
-import { Message } from '@/utils/types';
+import { Message, Room } from '@/utils/types';
 import { User } from '@firebase/auth';
 import Button from '../button';
 
@@ -13,7 +13,7 @@ export function MessageForm({
 }: {
   user: User | null | undefined;
   setMessages: Dispatch<SetStateAction<Message[]>>;
-  currentRoom: string;
+  currentRoom: Room | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
@@ -21,14 +21,17 @@ export function MessageForm({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    if (input && user) {
+    if (input && user && currentRoom) {
       const message = {
         name: user?.displayName ?? 'Anonymous',
         message: input,
-        room: currentRoom,
+        roomId: currentRoom?._id,
       };
       // Client-side code to join a room
-      socket.emit('messageToRoom', { roomId: currentRoom, message: message });
+      socket.emit('messageToRoom', {
+        roomId: currentRoom._id,
+        message: message,
+      });
       setMessages((prevMessages) => [...prevMessages, message]);
       setInput('');
       setIsLoading(false);
@@ -39,7 +42,7 @@ export function MessageForm({
     <form
       id='form'
       onSubmit={handleSubmit}
-      className='w-full space-x-4 inset-x-0 mx-auto flex items-center justify-center'
+      className='w-full m-2 space-x-4 inset-x-0 mx-auto flex items-center justify-center'
     >
       <input
         autoFocus

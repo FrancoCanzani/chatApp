@@ -13,8 +13,8 @@ export function Sidebar({
   setCurrentRoom,
   user,
 }: {
-  currentRoom: string;
-  setCurrentRoom: Dispatch<SetStateAction<string>>;
+  currentRoom: Room | null;
+  setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   user: User | null | undefined;
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -23,31 +23,31 @@ export function Sidebar({
 
   async function getRooms(userId: string) {
     try {
-      const res = await fetch(`http://localhost:3000/rooms/participants/${userId}`);
+      const res = await fetch(
+        `http://localhost:3000/rooms/participants/${userId}`
+      );
       if (res.ok) {
         const rooms = await res.json();
-        return rooms; 
+        return rooms;
       }
-      return []; 
+      return [];
     } catch (error) {
       console.error(error);
-      return []; 
+      return [];
     }
   }
-  
 
   useEffect(() => {
     async function fetchRooms() {
       if (user) {
         const rooms = await getRooms(user.uid);
-        setRooms(rooms)
-        console.log(rooms); 
+        setRooms(rooms);
+        console.log(rooms);
       }
     }
     fetchRooms();
   }, [user]);
-  
-  
+
   return (
     <aside
       className={`${
@@ -55,10 +55,8 @@ export function Sidebar({
       } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-lg overflow-auto`}
     >
       <UserProfile user={user} />
-      <CreateRoomForm  user={user} />
-      <JoinRoomForm
-        user={user}
-      />
+      <CreateRoomForm user={user} />
+      <JoinRoomForm user={user} />
       <Rooms
         currentRoom={currentRoom}
         rooms={rooms}
