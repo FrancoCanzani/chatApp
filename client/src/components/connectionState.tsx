@@ -9,10 +9,10 @@ export function ConnectionState() {
   return (
     <div
       aria-label={isConnected ? 'Online' : 'Offline'}
-      className='flex items-center mr-2 justify-center'
+      className='flex relative items-center mr-2 justify-center'
     >
       <span
-        className={cn('h-3 w-3 relative rounded-full', {
+        className={cn('h-3 w-3 rounded-full', {
           'bg-red-500': !isConnected,
           'bg-green-200 animate-ping': isConnected,
         })}

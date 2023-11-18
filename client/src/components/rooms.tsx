@@ -13,8 +13,8 @@ export default function Rooms({
   setCurrentRoom,
 }: {
   user: User | null | undefined;
-  rooms: string[];
-  setRooms: Dispatch<SetStateAction<string[]>>;
+  rooms: Room[];
+  setRooms: Dispatch<SetStateAction<Room[]>>;
   currentRoom: string;
   setCurrentRoom: Dispatch<SetStateAction<string>>;
 }) {
@@ -41,25 +41,25 @@ export default function Rooms({
         },
       });
       setCurrentRoom('');
-      setRooms(rooms.filter((room) => room !== roomId));
+      // setRooms(rooms.filter((room) => room !== roomId));
     }
   }
   return (
-    <div className='bg-yellow-100 flex flex-col p-2 rounded-lg h-full'>
+    <div className='bg-yellow-100 flex flex-col overflow-auto p-2 rounded-lg h-full'>
       <h2 className='text-lg p-1 font-semibold'>Rooms</h2>
-      <ul className='flex flex-1 flex-col gap-y-2 justify-start w-full items-start'>
-        {rooms.map((room: string) => (
+      <ul className='flex overflow-y-scroll flex-1 flex-col gap-y-2 justify-start w-full items-start'>
+        {rooms.map((room: Room) => (
           <li
-            key={room}
+            key={room._id}
             className='bg-blue-50 hover:bg-blue-100 flex flex-col gap-y-2 p-2 w-full rounded-lg text-start text-sm font-semibold'
           >
             <div className='flex items-center justify-between'>
               <div className='space-x-2'>
                 <Button
-                  onClick={() => handleJoinRoom(room)}
-                  disabled={room == currentRoom}
+                  onClick={() => handleJoinRoom(room._id)}
+                  disabled={room._id == currentRoom}
                   className={cn({
-                    'opacity-75': room == currentRoom,
+                    'opacity-75': room._id == currentRoom,
                   })}
                 >
                   Enter chat
@@ -73,7 +73,7 @@ export default function Rooms({
                 </Button>
               </div>
             </div>
-            <span className='text-[11px]'>Id: {room}</span>
+            <span className='text-[11px]'>Id: {room._id}</span>
           </li>
         ))}
       </ul>

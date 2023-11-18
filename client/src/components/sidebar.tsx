@@ -1,11 +1,12 @@
 'use client';
 
-import { useState, Dispatch, SetStateAction } from 'react';
+import { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import CreateRoomForm from './forms/createRoomForm';
 import { User } from '@firebase/auth';
 import UserProfile from './userProfile';
 import JoinRoomForm from './forms/joinRoomForm';
 import Rooms from './rooms';
+import { Room } from '@/utils/types';
 
 export function Sidebar({
   currentRoom,
@@ -17,9 +18,36 @@ export function Sidebar({
   user: User | null | undefined;
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
-  const [rooms, setRooms] = useState<string[]>([]);
+  const [rooms, setRooms] = useState<Room[]>([]);
   console.log(rooms);
 
+  async function getRooms(userId: string) {
+    try {
+      const res = await fetch(`http://localhost:3000/rooms/participants/${userId}`);
+      if (res.ok) {
+        const rooms = await res.json();
+        return rooms; 
+      }
+      return []; 
+    } catch (error) {
+      console.error(error);
+      return []; 
+    }
+  }
+  
+
+  useEffect(() => {
+    async function fetchRooms() {
+      if (user) {
+        const rooms = await getRooms(user.uid);
+        setRooms(rooms)
+        console.log(rooms); 
+      }
+    }
+    fetchRooms();
+  }, [user]);
+  
+  
   return (
     <aside
       className={`${
@@ -27,11 +55,9 @@ export function Sidebar({
       } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-lg overflow-auto`}
     >
       <UserProfile user={user} />
-      <CreateRoomForm setRooms={setRooms} user={user} />
+      <CreateRoomForm  user={user} />
       <JoinRoomForm
-        setCurrentRoom={setCurrentRoom}
-        currentRoom={currentRoom}
-        setRooms={setRooms}
+        user={user}
       />
       <Rooms
         currentRoom={currentRoom}

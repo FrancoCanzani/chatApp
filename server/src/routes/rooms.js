@@ -21,24 +21,17 @@ roomsRouter.get('/rooms/participants/:participantId', async (req, res) => {
 });
 
 roomsRouter.post('/rooms', async (req, res) => {
-  const {
-    roomName,
-    roomId,
-    roomType,
-    participants,
-    administrators,
-    creatorId,
-  } = req.body;
+  const { roomName, roomType, participants, administrators, creatorId } =
+    req.body;
 
   // Validate input
-  if (!roomName || !roomId || !roomType || !creatorId) {
+  if (!roomName || !roomType || !creatorId) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
     const newRoom = new Room({
       name: roomName,
-      Id: roomId,
       type: roomType,
       participants: participants,
       administrators: administrators,
@@ -57,7 +50,7 @@ roomsRouter.post('/rooms', async (req, res) => {
 });
 
 roomsRouter.patch(
-  '/rooms/:roomId/participants/:participantId',
+  '/rooms/:roomId/remove-participant/:participantId',
   async (req, res) => {
     const roomId = req.params.roomId;
     const participantId = req.params.participantId;
@@ -72,12 +65,14 @@ roomsRouter.patch(
         return res.status(404).json({ error: 'Room not found' });
       }
 
+      // Check if the participant exists in the room
       if (!room.participants.includes(participantId)) {
         return res
           .status(404)
-          .json({ message: 'Participant not found in the room' });
+          .json({ error: 'Participant not found in the room' });
       }
 
+      // Remove participant from the room
       await Room.updateOne(
         { _id: roomId },
         { $pull: { participants: participantId } }
@@ -85,6 +80,37 @@ roomsRouter.patch(
 
       res.status(200).json({
         message: `Participant ${participantId} removed from room ${roomId}`,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+);
+
+roomsRouter.patch(
+  '/rooms/:roomId/add-participant/:participantId',
+  async (req, res) => {
+    const roomId = req.params.roomId;
+    const participantId = req.params.participantId;
+
+    try {
+      if (!roomId) {
+        return res.status(400).json({ error: 'Room ID is required' });
+      }
+
+      const room = await Room.findOne({ _id: roomId });
+      if (!room) {
+        return res.status(404).json({ error: 'Room not found' });
+      }
+
+      await Room.updateOne(
+        { _id: roomId },
+        { $addToSet: { participants: participantId } }
+      );
+
+      res.status(200).json({
+        message: `Participant ${participantId} added to room ${roomId}`,
       });
     } catch (error) {
       console.error(error);

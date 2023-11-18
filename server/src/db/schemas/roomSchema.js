@@ -2,7 +2,6 @@ import { mongoose, model } from 'mongoose';
 
 const roomSchema = new mongoose.Schema({
   name: String,
-  Id: { type: String, required: true },
   type: {
     type: String,
     enum: ['private', 'group'],

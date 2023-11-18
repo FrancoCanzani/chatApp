@@ -1,6 +1,6 @@
 'use client';
 
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent } from 'react';
 import Button from '../button';
 import { useState } from 'react';
 import { User } from 'firebase/auth';
@@ -8,10 +8,8 @@ import handleCreateRoom from '@/utils/functions/handleCreateRoom';
 import { NewRoom, RoomType } from '@/utils/types';
 
 export default function CreateRoomForm({
-  setRooms,
   user,
 }: {
-  setRooms: Dispatch<SetStateAction<string[]>>;
   user: User | null | undefined;
 }) {
   const [input, setInput] = useState('');
@@ -28,17 +26,14 @@ export default function CreateRoomForm({
         if (user) {
           const roomData: NewRoom = {
             roomName: input,
-            roomId: self.crypto.randomUUID(),
             roomType: 'private' as RoomType,
             participants: [user?.uid],
             administrators: [user?.uid],
             creatorId: user?.uid,
           };
           const newRoom = await handleCreateRoom(roomData);
-          console.log(newRoom);
 
           if (newRoom) {
-            setRooms((prevRooms) => [...prevRooms, roomData.roomId]);
             setInput('');
           }
         }

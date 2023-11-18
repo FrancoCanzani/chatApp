@@ -3,16 +3,12 @@
 import { ChangeEvent, Dispatch, SetStateAction } from 'react';
 import Button from '../button';
 import { useState } from 'react';
-import { Room } from '@/utils/types';
+import { User } from 'firebase/auth';
 
 export default function JoinRoomForm({
-  currentRoom,
-  setCurrentRoom,
-  setRooms,
+  user
 }: {
-  currentRoom: string;
-  setCurrentRoom: Dispatch<SetStateAction<string>>;
-  setRooms: Dispatch<SetStateAction<string[]>>;
+  user: User | null | undefined
 }) {
   const [input, setInput] = useState('');
 
@@ -20,12 +16,26 @@ export default function JoinRoomForm({
     setInput(e.target.value);
   }
 
+  async function handleJoinRoom(userId: string) {
+    try {
+      const response = await fetch(`http://localhost:3000/rooms/${input}/add-participant/${userId}`, {
+        method: 'PATCH',
+      });
+
+    } catch (error) {
+      console.error('Error joining room:', error);
+    }
+
+    setInput('');
+  }
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        setRooms((prevRooms) => [...prevRooms, input]);
-        setInput('');
+        if(user) {
+          handleJoinRoom(user?.uid)
+          setInput('');
+        }
       }}
       className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'
     >
