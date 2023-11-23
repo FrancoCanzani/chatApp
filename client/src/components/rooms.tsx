@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react';
-import Button from './button';
 import { User } from 'firebase/auth';
 import { socket } from '@/socket';
 import { cn } from '@/utils/functions/cn';
@@ -45,33 +44,29 @@ export default function Rooms({
     }
   }
   return (
-    <div className='bg-yellow-100 flex flex-col overflow-auto p-2 rounded-lg h-full'>
-      <h2 className='text-lg p-1 font-semibold'>Rooms</h2>
-      <ul className='flex overflow-y-scroll flex-1 flex-col gap-y-2 justify-start w-full items-start'>
+    <div className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'>
+      <h2 className='text-md pb-1 pl-0.5 w-full text-start font-semibold'>
+        Rooms
+      </h2>
+      <ul className='flex flex-1 flex-col gap-y-2 justify-start w-full items-start'>
         {rooms.map((room: Room) => (
           <li
             key={room._id}
-            className='bg-blue-50 hover:bg-blue-100 flex flex-col gap-y-2 p-2 w-full rounded-lg text-start text-sm font-semibold'
+            onClick={() => handleJoinRoom(room)}
+            className={cn(
+              'bg-gray-200 text-xs cursor-pointer text-gray-800 flex flex-col gap-y-2 p-2 w-full rounded-md text-start font-semibold',
+              {
+                'ring-1 ring-gray-300': room._id == currentRoom?._id,
+              }
+            )}
           >
             <div className='flex items-center justify-between'>
-              <div className='space-x-2'>
-                <Button
-                  onClick={() => handleJoinRoom(room)}
-                  disabled={room._id == currentRoom?._id}
-                  className={cn({
-                    'opacity-75': room._id == currentRoom?._id,
-                  })}
-                >
-                  Enter chat
-                </Button>
-                <Button
-                  variant={'primary'}
-                  size={'small'}
-                  onClick={() => handleLeaveRoom(currentRoom?._id)}
-                >
-                  Leave room
-                </Button>
-              </div>
+              <p>{room.name}</p>
+              <span
+                className={cn('h-2 w-2 rounded-full', {
+                  'bg-green-500': room._id == currentRoom?._id,
+                })}
+              ></span>
             </div>
             <span className='text-[11px]'>Id: {room._id}</span>
           </li>

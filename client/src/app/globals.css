@@ -2,39 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add this CSS to your stylesheet */
-
-/* Define a class for the scrollbar track (the background) */
-.scrollbar-track {
-  --scrollbar-background: #f3f4f6; /* Light background color */
-  --scrollbar-hover-background: #e5e7eb; /* Darker background color on hover */
+/* Firefox */
+* {
+  scrollbar-width: thin; /* Options: 'auto', 'thin', 'none' */
+  scrollbar-color: #9d9d9d; /* Thumb and track color */
 }
 
-.scrollbar-track::-webkit-scrollbar {
-  width: 12px; /* Adjust the width of the scrollbar */
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px; /* Adjusts the width of the vertical scrollbar */
 }
 
-.scrollbar-track::-webkit-scrollbar-track {
-  background: var(--scrollbar-background);
+*::-webkit-scrollbar-track {
+  margin-top: 500px;
+  margin-bottom: 500px;
 }
 
-.scrollbar-track::-webkit-scrollbar-track:hover {
-  background: var(--scrollbar-hover-background);
-}
-
-/* Define a class for the scrollbar handle */
-.scrollbar-thumb {
-  --scrollbar-thumb-color: #d1d5db; /* The color of the scrollbar handle */
-  --scrollbar-thumb-hover-color: #bec5cc; /* Slightly darker scrollbar handle on hover */
-  --scrollbar-border-color: #f3f4f6; /* Border color */
-}
-
-.scrollbar-thumb::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color);
-  border-radius: 20px; /* Rounded corners on the scrollbar handle */
-  border: 3px solid var(--scrollbar-border-color); /* Creates a border inside the scrollbar track */
-}
-
-.scrollbar-thumb::-webkit-scrollbar-thumb:hover {
-  background: var(--scrollbar-thumb-hover-color);
+*::-webkit-scrollbar-thumb {
+  background-color: #c5c5c5; /* Thumb color */
+  border-radius: 10px;
 }

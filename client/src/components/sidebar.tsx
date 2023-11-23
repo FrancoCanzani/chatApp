@@ -42,7 +42,6 @@ export function Sidebar({
       if (user) {
         const rooms = await getRooms(user.uid);
         setRooms(rooms);
-        console.log(rooms);
       }
     }
     fetchRooms();
@@ -52,7 +51,7 @@ export function Sidebar({
     <aside
       className={`${
         showSidebar ? 'w-80' : 'hidden'
-      } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-lg overflow-auto`}
+      } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-md overflow-auto`}
     >
       <UserProfile user={user} />
       <CreateRoomForm user={user} />

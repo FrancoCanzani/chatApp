@@ -27,7 +27,6 @@ export function MessageForm({
         message: input,
         roomId: currentRoom?._id,
       };
-      // Client-side code to join a room
       socket.emit('messageToRoom', {
         roomId: currentRoom._id,
         message: message,
@@ -42,7 +41,7 @@ export function MessageForm({
     <form
       id='form'
       onSubmit={handleSubmit}
-      className='w-full m-2 space-x-4 inset-x-0 mx-auto flex items-center justify-center'
+      className='max-w-full w-5/6 m-2 space-x-4 inset-x-0 mx-auto flex items-center justify-center'
     >
       <input
         autoFocus

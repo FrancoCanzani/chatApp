@@ -50,12 +50,12 @@ export default function CreateRoomForm({
           onChange={handleChange}
           autoComplete='off'
           placeholder='Room name'
-          className='rounded-lg w-2/3 px-2 py-1 outline-none'
+          className='rounded-md w-2/3 px-2 py-1 outline-none'
         />
         <Button
           variant={'submit'}
           size={'small'}
-          className='px-2 py-1 rounded-lg'
+          className='px-2 py-1 rounded-md'
         >
           Create
         </Button>

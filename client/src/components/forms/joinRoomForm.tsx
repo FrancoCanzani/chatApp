@@ -6,9 +6,9 @@ import { useState } from 'react';
 import { User } from 'firebase/auth';
 
 export default function JoinRoomForm({
-  user
+  user,
 }: {
-  user: User | null | undefined
+  user: User | null | undefined;
 }) {
   const [input, setInput] = useState('');
 
@@ -18,10 +18,12 @@ export default function JoinRoomForm({
 
   async function handleJoinRoom(userId: string) {
     try {
-      const response = await fetch(`http://localhost:3000/rooms/${input}/add-participant/${userId}`, {
-        method: 'PATCH',
-      });
-
+      const response = await fetch(
+        `http://localhost:3000/rooms/${input}/add-participant/${userId}`,
+        {
+          method: 'PATCH',
+        }
+      );
     } catch (error) {
       console.error('Error joining room:', error);
     }
@@ -32,8 +34,8 @@ export default function JoinRoomForm({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        if(user) {
-          handleJoinRoom(user?.uid)
+        if (user) {
+          handleJoinRoom(user?.uid);
           setInput('');
         }
       }}
@@ -49,12 +51,12 @@ export default function JoinRoomForm({
           onChange={handleChange}
           autoComplete='off'
           placeholder='Room id'
-          className='rounded-lg w-2/3 px-2 py-1 outline-none'
+          className='rounded-md w-2/3 px-2 py-1 outline-none'
         />
         <Button
           variant={'submit'}
           size={'small'}
-          className='px-2 py-1 rounded-lg'
+          className='px-2 py-1 rounded-md'
         >
           Join
         </Button>
