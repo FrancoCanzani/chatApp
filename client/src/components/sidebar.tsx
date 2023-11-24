@@ -50,7 +50,7 @@ export function Sidebar({
   return (
     <aside
       className={`${
-        showSidebar ? 'w-80' : 'hidden'
+        showSidebar ? 'w-96' : 'hidden'
       } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-md overflow-auto`}
     >
       <UserProfile user={user} />

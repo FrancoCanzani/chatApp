@@ -39,27 +39,28 @@ export function MessageForm({
 
   return (
     <form
-      id='form'
       onSubmit={handleSubmit}
-      className='max-w-full w-5/6 m-2 space-x-4 inset-x-0 mx-auto flex items-center justify-center'
+      className='w-full absolute bottom-0 border-t-2 z-10 border-gray-300 bg-gray-200 mt-2 py-2'
     >
-      <input
-        autoFocus
-        id='input'
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        autoComplete='off'
-        placeholder='Message'
-        className='rounded-md w-4/5 px-4 outline-none py-2 ring border border-gray-200 ring-gray-50'
-      />
-      <Button
-        type='submit'
-        disabled={isLoading}
-        variant={'send'}
-        size={'medium'}
-      >
-        Send
-      </Button>
+      <div className='w-5/6 space-x-2 inset-x-0 mx-auto flex items-center justify-center'>
+        <input
+          autoFocus
+          id='input'
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          autoComplete='off'
+          placeholder='Message'
+          className='rounded-md text-sm w-4/5 px-4 outline-none py-2'
+        />
+        <Button
+          type='submit'
+          disabled={isLoading}
+          variant={'send'}
+          size={'medium'}
+        >
+          Send
+        </Button>
+      </div>
     </form>
   );
 }

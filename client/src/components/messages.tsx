@@ -27,7 +27,7 @@ export function Messages({
   }, [messages]);
 
   return (
-    <ul className='pb-2 w-full px-3 overflow-auto flex flex-col-reverse scrollbar-track scrollbar-thumb'>
+    <ol className='pb-[3.5rem] w-full px-3 overflow-auto flex flex-col items-start justify-start'>
       {roomMessages.map((message, index) => (
         <li
           key={index}
@@ -48,6 +48,6 @@ export function Messages({
           </div>
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }

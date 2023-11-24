@@ -17,7 +17,7 @@ export default function UserProfile({
           alt='profile pic'
           className='rounded-md'
         />
-        <span className='text-sm font-medium text-gray-800'>
+        <span className='text-xs font-semibold text-gray-800'>
           {user?.displayName}
         </span>
       </div>
