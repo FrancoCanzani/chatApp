@@ -7,6 +7,7 @@ import UserProfile from './userProfile';
 import JoinRoomForm from './forms/joinRoomForm';
 import Rooms from './rooms';
 import { Room } from '@/utils/types';
+import getRooms from '@/utils/functions/getRooms';
 
 export function Sidebar({
   currentRoom,
@@ -19,23 +20,6 @@ export function Sidebar({
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
   const [rooms, setRooms] = useState<Room[]>([]);
-  console.log(rooms);
-
-  async function getRooms(userId: string) {
-    try {
-      const res = await fetch(
-        `http://localhost:3000/rooms/participants/${userId}`
-      );
-      if (res.ok) {
-        const rooms = await res.json();
-        return rooms;
-      }
-      return [];
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
 
   useEffect(() => {
     async function fetchRooms() {
@@ -54,8 +38,8 @@ export function Sidebar({
       } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-md overflow-auto`}
     >
       <UserProfile user={user} />
-      <CreateRoomForm user={user} />
-      <JoinRoomForm user={user} />
+      <CreateRoomForm user={user} setRooms={setRooms} />
+      <JoinRoomForm user={user} setRooms={setRooms} />
       <Rooms
         currentRoom={currentRoom}
         rooms={rooms}

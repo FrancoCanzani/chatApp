@@ -1,14 +1,17 @@
 'use client';
 
-import { ChangeEvent, Dispatch, SetStateAction } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import Button from '../button';
-import { useState } from 'react';
 import { User } from 'firebase/auth';
+import { Room } from '@/utils/types';
+import getRooms from '@/utils/functions/getRooms';
 
 export default function JoinRoomForm({
   user,
+  setRooms,
 }: {
   user: User | null | undefined;
+  setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
 
@@ -18,31 +21,35 @@ export default function JoinRoomForm({
 
   async function handleJoinRoom(userId: string) {
     try {
-      const response = await fetch(
+      const res = await fetch(
         `http://localhost:3000/rooms/${input}/add-participant/${userId}`,
         {
           method: 'PATCH',
         }
       );
+
+      if (res.ok) {
+        setInput('');
+      }
     } catch (error) {
       console.error('Error joining room:', error);
     }
-
-    setInput('');
   }
   return (
     <form
-      onSubmit={(e) => {
+      onSubmit={async (e) => {
         e.preventDefault();
         if (user) {
-          handleJoinRoom(user?.uid);
+          await handleJoinRoom(user?.uid);
+          const rooms = await getRooms(user.uid);
+          setRooms(rooms);
           setInput('');
         }
       }}
       className='w-full ring-2 ring-gray-100 bg-gray-50 border p-1 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'
     >
       <h1 className='w-full text-start text-xs text-gray-800 font-medium mb-1 pl-1'>
-        Join a room
+        Join Room
       </h1>
       <div className='space-x-2 w-full flex items-center justify-center'>
         <input

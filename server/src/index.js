@@ -5,6 +5,7 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { roomsRouter } from './routes/rooms.js';
+import { usersRouter } from './routes/users.js';
 import { connectDB } from './db/connectDB.js';
 import 'dotenv/config';
 
@@ -15,7 +16,11 @@ connectDB();
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'http://localhost:3001'], // ports here
+    origin: [
+      'http://localhost:3000',
+      'http://localhost:3001',
+      'http://localhost:3002',
+    ], // ports here
     methods: ['GET', 'POST', 'PATCH'],
   },
 });
@@ -52,6 +57,7 @@ io.on('connection', (socket) => {
 });
 
 app.use('/', roomsRouter);
+app.use('/', usersRouter);
 
 // Error handling middleware
 app.use((error, req, res, next) => {

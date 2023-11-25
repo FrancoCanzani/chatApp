@@ -2,15 +2,18 @@
 
 import { ChangeEvent } from 'react';
 import Button from '../button';
-import { useState } from 'react';
+import { useState, Dispatch, SetStateAction } from 'react';
 import { User } from 'firebase/auth';
 import handleCreateRoom from '@/utils/functions/handleCreateRoom';
-import { NewRoom, RoomType } from '@/utils/types';
+import { NewRoom, RoomType, Room } from '@/utils/types';
+import getRooms from '@/utils/functions/getRooms';
 
 export default function CreateRoomForm({
   user,
+  setRooms,
 }: {
   user: User | null | undefined;
+  setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
 
@@ -34,6 +37,8 @@ export default function CreateRoomForm({
           const newRoom = await handleCreateRoom(roomData);
 
           if (newRoom) {
+            const rooms = await getRooms(user.uid);
+            setRooms(rooms);
             setInput('');
           }
         }
