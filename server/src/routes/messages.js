@@ -6,17 +6,7 @@ export const messagesRouter = Router();
 messagesRouter.get('/messages/:roomId', async (req, res) => {
   try {
     const roomId = req.params.roomId;
-    const lastMessageId = req.query.lastMessageId;
-    const limit = parseInt(req.query.limit, 10) || 20; // default to 20 messages
-
-    const query = { roomId };
-    if (lastMessageId) {
-      query._id = { $lt: lastMessageId };
-    }
-
-    const messages = await Message.find(query)
-      .sort({ sentAt: -1 })
-      .limit(limit);
+    const messages = await Message.find({ roomId }).sort({ sentAt: 1 });
 
     res.json(messages);
   } catch (error) {

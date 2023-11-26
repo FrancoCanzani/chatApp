@@ -26,6 +26,33 @@ export default function Chat({ currentRoom }: { currentRoom: Room | null }) {
     };
   }, []);
 
+  useEffect(() => {
+    async function getMessages(roomId: string) {
+      try {
+        const res = await fetch(`http://localhost:3000/messages/${roomId}`);
+        const response = await res.json();
+        if (res.ok) {
+          console.log(response);
+          return response;
+        } else {
+          throw new Error('Network response was not ok.');
+        }
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+        return null;
+      }
+    }
+
+    async function fetchMessages() {
+      if (currentRoom?._id) {
+        const fetchedMessages = await getMessages(currentRoom._id);
+        setMessages(fetchedMessages);
+      }
+    }
+
+    fetchMessages();
+  }, [currentRoom]);
+
   return (
     <main className='w-full relative ring-4 ring-gray-100 border-2 border-gray-300 shadow-gray-100 flex justify-start m-4 rounded-md items-start flex-col'>
       <RoomChatInfo currentRoom={currentRoom} />
