@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
-import { socket } from '../../socket';
-import { Message, Room } from '@/utils/types';
 import { User } from '@firebase/auth';
 import Button from '../button';
+import { Message, Room } from '@/utils/types';
+import { socket } from '../../socket'; // Ensure the correct path to your socket instance
 
 export function MessageForm({
   user,
@@ -18,22 +18,46 @@ export function MessageForm({
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+
     if (input && user && currentRoom) {
-      const message = {
-        name: user?.displayName ?? 'Anonymous',
-        message: input,
-        roomId: currentRoom?._id,
-      };
-      socket.emit('messageToRoom', {
+      const messageData = {
         roomId: currentRoom._id,
-        message: message,
-      });
-      setMessages((prevMessages) => [...prevMessages, message]);
-      setInput('');
-      setIsLoading(false);
+        senderId: user.uid,
+        senderDisplayName: user.displayName,
+        text: input,
+      };
+
+      try {
+        const response = await fetch('http://localhost:3000/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(messageData),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const newMessage = await response.json();
+        console.log(newMessage);
+
+        socket.emit('messageToRoom', {
+          roomId: currentRoom._id,
+          message: newMessage,
+        });
+
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      } catch (error) {
+        console.error('Failed to send message:', error);
+      } finally {
+        setInput('');
+        setIsLoading(false);
+      }
     }
   };
 

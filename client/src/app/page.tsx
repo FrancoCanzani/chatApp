@@ -25,9 +25,6 @@ export default function App() {
           const userExists = await checkIfUserExists(uid);
           if (!userExists) {
             const newUser = await createNewUser(displayName, email, uid);
-            if (newUser) {
-              console.log('User created');
-            }
           }
         })();
       }

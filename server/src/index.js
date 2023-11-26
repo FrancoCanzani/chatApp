@@ -6,6 +6,7 @@ import { Server } from 'socket.io';
 import { createServer } from 'http';
 import { roomsRouter } from './routes/rooms.js';
 import { usersRouter } from './routes/users.js';
+import { messagesRouter } from './routes/messages.js';
 import { connectDB } from './db/connectDB.js';
 import 'dotenv/config';
 
@@ -52,12 +53,14 @@ io.on('connection', (socket) => {
 
   // Server-side code to emit a message to a room
   socket.on('messageToRoom', ({ roomId, message }) => {
+    console.log(message);
     socket.to(roomId).emit('messageToRoom', message);
   });
 });
 
 app.use('/', roomsRouter);
 app.use('/', usersRouter);
+app.use('/', messagesRouter);
 
 // Error handling middleware
 app.use((error, req, res, next) => {

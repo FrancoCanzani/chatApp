@@ -1,33 +1,30 @@
-import mongoose from 'mongoose';
+import { mongoose, model } from 'mongoose';
 
 const messageSchema = new mongoose.Schema({
-  room_id: {
-    type: mongoose.Schema.Types.ObjectId,
+  roomId: {
+    type: String,
     ref: 'Room',
     required: true,
   },
-  sender_id: {
-    type: mongoose.Schema.Types.ObjectId,
+  senderId: {
+    type: String,
+    ref: 'User',
+    required: true,
+  },
+  senderDisplayName: {
+    type: String,
     ref: 'User',
     required: true,
   },
   text: String,
-  attachments: [
+  readBy: [
     {
-      url: String,
-      filename: String,
-      mime_type: String,
-      size: Number,
+      userId: { type: String, ref: 'User' },
+      readAt: { type: Date, default: Date.now },
     },
   ],
-  read_by: [
-    {
-      user_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      read_at: { type: Date, default: Date.now },
-    },
-  ],
-  sent_at: { type: Date, default: Date.now },
-  edited_at: Date,
+  sentAt: { type: Date, default: Date.now },
+  editedAt: Date,
 });
 
 export const Message = model('Message', messageSchema);
