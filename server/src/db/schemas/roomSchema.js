@@ -7,9 +7,9 @@ const roomSchema = new mongoose.Schema({
     enum: ['private', 'group'],
     required: true,
   },
-  participants: [{ type: String, ref: 'User' }],
-  administrators: [{ type: [String], ref: 'User' }],
-  createdBy: { type: String, ref: 'User' },
+  participants: [String],
+  administrators: [String],
+  createdBy: { type: String },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

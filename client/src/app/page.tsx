@@ -18,17 +18,20 @@ export default function App() {
   const [user, loading, error] = useAuthState(auth);
 
   useEffect(() => {
-    if (user) {
-      const { displayName, email, uid } = user;
-      if (displayName && email && uid) {
-        (async () => {
+    // checks if a user exists in the DB, if not creates one
+    async function handleUser() {
+      if (user) {
+        const { displayName, email, uid } = user;
+        if (displayName && email && uid) {
           const userExists = await checkIfUserExists(uid);
           if (!userExists) {
-            const newUser = await createNewUser(displayName, email, uid);
+            await createNewUser(displayName, email, uid);
           }
-        })();
+        }
       }
     }
+
+    handleUser();
   }, [user]);
 
   return (

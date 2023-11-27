@@ -12,7 +12,6 @@ export default async function handleCreateRoom(newRoomData: NewRoom) {
 
     const response = await newRoom.json();
     if (newRoom.ok) {
-      console.log('Room created successfully:', response);
       return response;
     } else {
       console.log('Error creating room:', response);

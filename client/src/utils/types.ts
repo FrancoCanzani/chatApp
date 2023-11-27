@@ -27,4 +27,17 @@ type NewRoom = {
   creatorId: string;
 };
 
-export type { Message, Room, NewRoom, RoomType };
+type DbUser = {
+  _id: string;
+  displayName: string;
+  userId: string;
+  email: string;
+  status: 'online' | 'offline' | 'away';
+  contacts: string[];
+  blockedUsers: string[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+};
+
+export type { Message, Room, NewRoom, RoomType, DbUser };

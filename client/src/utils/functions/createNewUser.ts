@@ -19,7 +19,6 @@ export default async function createNewUser(
 
     const response = await res.json();
     if (res.ok) {
-      console.log('User created successfully:', response);
       return response;
     } else {
       console.log('Error creating user:', response);

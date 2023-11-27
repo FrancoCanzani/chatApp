@@ -23,9 +23,13 @@ export function Sidebar({
 
   useEffect(() => {
     async function fetchRooms() {
-      if (user) {
-        const rooms = await getRooms(user.uid);
-        setRooms(rooms);
+      try {
+        if (user) {
+          const rooms = await getRooms(user.uid);
+          setRooms(rooms);
+        }
+      } catch (error) {
+        console.log(error);
       }
     }
     fetchRooms();

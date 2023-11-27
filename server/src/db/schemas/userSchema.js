@@ -1,11 +1,10 @@
-import {mongoose, model} from 'mongoose';
+import { mongoose, model } from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: false, unique: true },
+  displayName: String,
   userId: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   hashedPassword: { type: String, required: false },
-  displayName: String,
   avatar: String,
   status: {
     type: String,
@@ -13,8 +12,8 @@ const userSchema = new mongoose.Schema({
     default: 'online',
   },
   lastSeen: Date,
-  contacts: [{ type: String, ref: 'User' }],
-  blockedUsers: [{ type: String, ref: 'User' }],
+  contacts: [String], // Array of Firebase UIDs
+  blockedUsers: [String], // Array of Firebase UIDs
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
