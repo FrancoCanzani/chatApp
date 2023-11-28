@@ -1,22 +1,23 @@
 'use client';
 
-import { useState, FormEvent, Dispatch, SetStateAction } from 'react';
-import { User } from '@firebase/auth';
-import Button from '../button';
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react';
+
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
-import { socket } from '../../socket'; // Ensure the correct path to your socket instance
+
+import { socket } from '../../socket';
+import Button from '../button';
 
 export function MessageForm({
-  user,
   setMessages,
   currentRoom,
 }: {
-  user: User | null | undefined;
   setMessages: Dispatch<SetStateAction<Message[]>>;
   currentRoom: Room | null;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
+  const { user, loading, error } = useAuth();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -44,7 +45,6 @@ export function MessageForm({
         }
 
         const newMessage = await response.json();
-        console.log(newMessage);
 
         socket.emit('messageToRoom', {
           roomId: currentRoom._id,
@@ -60,6 +60,10 @@ export function MessageForm({
       }
     }
   };
+
+  if (!currentRoom) {
+    return null;
+  }
 
   return (
     <form

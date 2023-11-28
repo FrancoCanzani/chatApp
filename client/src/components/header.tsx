@@ -2,14 +2,18 @@
 
 import {
   getAuth,
-  signInWithRedirect,
   GoogleAuthProvider,
-  User,
+  signInWithRedirect,
   signOut,
 } from 'firebase/auth';
+
+import { useAuth } from '@/utils/hooks/useAuth';
+
 import { app } from '../firebase';
 
-export default function Header({ user }: { user: User | null | undefined }) {
+export default function Header() {
+  const { user, loading, error: authError } = useAuth();
+
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 

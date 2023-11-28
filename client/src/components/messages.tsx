@@ -1,20 +1,30 @@
 'use client';
 
-import { User } from '@firebase/auth';
-import { Message, Room } from '@/utils/types';
+import { Loader2 } from 'lucide-react';
+import { Dispatch, SetStateAction, useEffect, useRef } from 'react';
+import useSWR from 'swr';
+
 import { cn } from '@/utils/functions/cn';
-import { useRef, useEffect } from 'react';
+import fetcher from '@/utils/functions/fetcher';
 import formatTime from '@/utils/functions/formatTime';
+import { useAuth } from '@/utils/hooks/useAuth';
+import { Message, Room } from '@/utils/types';
 
 export function Messages({
   messages,
-  user,
+  setMessages,
   currentRoom,
 }: {
   messages: Message[];
-  user: User | null | undefined;
+  setMessages: Dispatch<SetStateAction<Message[]>>;
   currentRoom: Room | null;
 }) {
+  const { user, loading, error: authError } = useAuth();
+  const { data, error, isLoading } = useSWR(
+    currentRoom ? `http://localhost:3000/messages/${currentRoom._id}` : null,
+    fetcher
+  );
+
   const roomMessages = messages.filter(
     (message) => message.roomId == currentRoom?._id
   );
@@ -26,6 +36,16 @@ export function Messages({
       bottomListRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
+
+  useEffect(() => {
+    if (data) {
+      setMessages(data);
+    }
+  }, [data]);
+
+  if (isLoading) {
+    return <Loader2 className='animate-spin m-auto' />;
+  }
 
   return (
     <ol className='pb-[3.5rem] w-full px-3 overflow-auto flex flex-col items-start justify-start'>

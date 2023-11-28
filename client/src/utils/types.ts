@@ -40,4 +40,4 @@ type DbUser = {
   __v: number;
 };
 
-export type { Message, Room, NewRoom, RoomType, DbUser };
+export type { DbUser, Message, NewRoom, Room, RoomType };

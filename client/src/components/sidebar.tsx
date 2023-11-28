@@ -1,39 +1,42 @@
 'use client';
 
-import { useState, Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import useSWR from 'swr';
+
+import fetcher from '@/utils/functions/fetcher';
+import { useAuth } from '@/utils/hooks/useAuth';
+import { Message, Room } from '@/utils/types';
+
 import CreateRoomForm from './forms/createRoomForm';
-import { User } from '@firebase/auth';
-import UserProfile from './userProfile';
 import JoinRoomForm from './forms/joinRoomForm';
 import Rooms from './rooms';
-import { Room } from '@/utils/types';
-import getRooms from '@/utils/functions/getRooms';
+import UserProfile from './userProfile';
 
 export function Sidebar({
   currentRoom,
   setCurrentRoom,
-  user,
+  messages,
+  lastMessages,
 }: {
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
-  user: User | null | undefined;
+  messages: Message[];
+  lastMessages: { [key: string]: Message };
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
   const [rooms, setRooms] = useState<Room[]>([]);
+  const { user, loading, error: authError } = useAuth();
+
+  const { data, error, isLoading } = useSWR(
+    user ? `http://localhost:3000/rooms/participants/${user.uid}` : null,
+    fetcher
+  );
 
   useEffect(() => {
-    async function fetchRooms() {
-      try {
-        if (user) {
-          const rooms = await getRooms(user.uid);
-          setRooms(rooms);
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    if (data) {
+      setRooms(data);
     }
-    fetchRooms();
-  }, [user]);
+  }, [user, data]);
 
   return (
     <aside
@@ -48,8 +51,8 @@ export function Sidebar({
         currentRoom={currentRoom}
         rooms={rooms}
         setCurrentRoom={setCurrentRoom}
-        setRooms={setRooms}
         user={user}
+        lastMessages={lastMessages}
       />
     </aside>
   );

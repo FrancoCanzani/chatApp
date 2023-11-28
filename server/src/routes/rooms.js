@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Room } from '../db/schemas/roomSchema.js';
+import { Message } from '../db/schemas/messageSchema.js';
 
 export const roomsRouter = Router();
 
@@ -118,3 +119,27 @@ roomsRouter.patch(
     }
   }
 );
+
+roomsRouter.get('/rooms/last-messages/:participantId', async (req, res) => {
+  const participantId = req.params.participantId;
+
+  try {
+    const rooms = await Room.find({ participants: participantId });
+    let lastMessages = {};
+
+    for (const room of rooms) {
+      const lastMessage = await Message.findOne({ roomId: room._id }).sort({
+        sentAt: -1,
+      });
+      if (lastMessage) {
+        lastMessages[room._id] = lastMessage;
+      }
+    }
+    console.log(lastMessages);
+
+    res.status(200).json(lastMessages);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});

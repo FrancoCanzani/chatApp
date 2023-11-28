@@ -1,12 +1,14 @@
 'use client';
 
-import { ChangeEvent } from 'react';
-import Button from '../button';
-import { useState, Dispatch, SetStateAction } from 'react';
 import { User } from 'firebase/auth';
-import handleCreateRoom from '@/utils/functions/handleCreateRoom';
-import { NewRoom, RoomType, Room } from '@/utils/types';
+import { ChangeEvent } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+
 import getRooms from '@/utils/functions/getRooms';
+import handleCreateRoom from '@/utils/functions/handleCreateRoom';
+import { NewRoom, Room, RoomType } from '@/utils/types';
+
+import Button from '../button';
 
 export default function CreateRoomForm({
   user,
