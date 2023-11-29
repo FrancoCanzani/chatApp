@@ -15,12 +15,10 @@ import UserProfile from './userProfile';
 export function Sidebar({
   currentRoom,
   setCurrentRoom,
-  messages,
   lastMessages,
 }: {
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
-  messages: Message[];
   lastMessages: { [key: string]: Message };
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
@@ -41,8 +39,8 @@ export function Sidebar({
   return (
     <aside
       className={`${
-        showSidebar ? 'w-96' : 'hidden'
-      } border-r flex flex-col gap-2 p-4 border-sky-50 rounded-md overflow-auto`}
+        showSidebar ? 'w-[34rem]' : 'hidden'
+      } border-r flex flex-col gap-2 p-2 border-gray-50 rounded-md overflow-auto`}
     >
       <UserProfile user={user} />
       <CreateRoomForm user={user} setRooms={setRooms} />
@@ -51,7 +49,6 @@ export function Sidebar({
         currentRoom={currentRoom}
         rooms={rooms}
         setCurrentRoom={setCurrentRoom}
-        user={user}
         lastMessages={lastMessages}
       />
     </aside>

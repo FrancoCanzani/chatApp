@@ -1,23 +1,24 @@
-import { User } from 'firebase/auth';
 import { Dispatch, SetStateAction } from 'react';
 
 import { socket } from '@/socket';
 import { cn } from '@/utils/functions/cn';
+import formatTime from '@/utils/functions/formatTime';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 export default function Rooms({
-  user,
   rooms,
   currentRoom,
   setCurrentRoom,
   lastMessages,
 }: {
-  user: User | null | undefined;
   rooms: Room[];
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   lastMessages: { [key: string]: Message };
 }) {
+  const { user, loading, error: authError } = useAuth();
+
   function handleJoinRoom(room: Room) {
     if (room._id) {
       socket.emit('joinRoom', {
@@ -66,7 +67,7 @@ export default function Rooms({
               <p>{room.name}</p>
               <span
                 className={cn('h-2 w-2 rounded-full', {
-                  'bg-green-500': room._id == currentRoom?._id,
+                  'bg-green-400': room._id == currentRoom?._id,
                 })}
               ></span>
             </div>
@@ -83,9 +84,14 @@ export default function Rooms({
 
 function LastMessage({ lastMessage }: { lastMessage: Message }) {
   return (
-    <div className='flex items-center justify-start space-x-1'>
-      <span className='min-w-fit'>{lastMessage.senderDisplayName}: </span>
-      <p className='font-normal truncate'>{lastMessage.text}</p>
+    <div className='flex items-center justify-between space-x-2'>
+      <div className='flex items-center overflow-clip justify-start space-x-1 max-w-fit'>
+        <span className='min-w-fit'>{lastMessage.senderDisplayName}: </span>
+        <p className='font-normal truncate'>{lastMessage.text}</p>
+      </div>
+      <span className='text-[0.6rem] font-light text-gray-500'>
+        {formatTime(lastMessage.sentAt)}
+      </span>
     </div>
   );
 }

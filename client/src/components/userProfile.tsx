@@ -1,6 +1,7 @@
-import Image from 'next/image';
-import { ConnectionState } from './connectionState';
 import { User } from 'firebase/auth';
+import Image from 'next/image';
+
+import { ConnectionState } from './connectionState';
 
 export default function UserProfile({
   user,

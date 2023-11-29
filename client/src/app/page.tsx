@@ -77,7 +77,6 @@ export default function App() {
         <Sidebar
           currentRoom={currentRoom}
           setCurrentRoom={setCurrentRoom}
-          messages={messages}
           lastMessages={lastMessages}
         />
         <Chat
