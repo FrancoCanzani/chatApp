@@ -1,6 +1,6 @@
 'use client';
 
-import { Loader2 } from 'lucide-react';
+import { ArrowDownToLine } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import useSWR from 'swr';
 
@@ -22,7 +22,7 @@ export function Messages({
   currentRoom: Room | null;
 }) {
   const [limit, setLimit] = useState(1);
-  const [isFetching, setIsFetching] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
   const { user, loading, error: authError } = useAuth();
   const { data, error, isLoading } = useSWR(
     currentRoom
@@ -30,7 +30,6 @@ export function Messages({
       : null,
     fetcher
   );
-
   const roomMessages = messages.filter(
     (message) => message.roomId == currentRoom?._id
   );
@@ -41,17 +40,32 @@ export function Messages({
     }
   }, [data]);
 
+  const bottomRef = useRef<null | HTMLDivElement>(null);
+
+  function handleScrollToBottom() {
+    if (bottomRef.current) {
+      bottomRef.current.scrollIntoView({
+        behavior: 'instant',
+        block: 'end',
+      });
+    }
+    // There has to be a delay because the scroll to bottom triggers the on scroll
+    setTimeout(() => {
+      setShowScrollButton(false);
+    }, 50);
+  }
+
   return (
     <div
-      className={cn('w-full h-full px-2 pb-14 flex', {
-        'flex-col-reverse scroller  overflow-auto': !isLoading,
-      })}
+      className={
+        'w-full h-full px-2 flex flex-col-reverse scroller overflow-auto'
+      }
+      onScroll={() => setShowScrollButton(true)}
     >
       <div className='scroller-content'>
         {data && !data.isEndOfList && (
           <ChatObserverTarget limit={limit} setLimit={setLimit} />
         )}
-
         {roomMessages.map((message, index) => (
           <div
             key={index}
@@ -74,6 +88,16 @@ export function Messages({
             </div>
           </div>
         ))}
+        {showScrollButton && (
+          <button
+            className='sticky bottom-3 left-1/2 bg-gray-100 rounded-full p-2 -translate-x-1/2'
+            onClick={handleScrollToBottom}
+            aria-label='scroll to bottom'
+          >
+            <ArrowDownToLine size={20} />
+          </button>
+        )}
+        <div ref={bottomRef} />
       </div>
     </div>
   );

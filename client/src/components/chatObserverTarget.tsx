@@ -11,7 +11,6 @@ export function ChatObserverTarget({
 }) {
   const observerTarget = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer setup
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
