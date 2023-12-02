@@ -53,7 +53,6 @@ io.on('connection', (socket) => {
 
   // Server-side code to emit a message to a room
   socket.on('messageToRoom', ({ roomId, message }) => {
-    console.log(message);
     io.to(roomId).emit('messageToRoom', message);
   });
 });

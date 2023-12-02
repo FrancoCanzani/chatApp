@@ -22,3 +22,14 @@
   background-color: #c5c5c5; /* Thumb color */
   border-radius: 10px;
 }
+
+/* Chat scroll functionality  */
+/* Messages components */
+
+.scroller {
+  overflow-anchor: auto !important;
+}
+
+.scroller-content .item {
+  transform: translateZ(0); /* Fixes Safari iOS bug */
+}

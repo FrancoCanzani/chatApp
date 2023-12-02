@@ -135,7 +135,6 @@ roomsRouter.get('/rooms/last-messages/:participantId', async (req, res) => {
         lastMessages[room._id] = lastMessage;
       }
     }
-    console.log(lastMessages);
 
     res.status(200).json(lastMessages);
   } catch (error) {

@@ -50,8 +50,6 @@ export function MessageForm({
           roomId: currentRoom._id,
           message: newMessage,
         });
-
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
       } catch (error) {
         console.error('Failed to send message:', error);
       } finally {

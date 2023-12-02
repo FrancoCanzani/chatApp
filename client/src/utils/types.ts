@@ -4,6 +4,7 @@ type Message = {
   senderDisplayName: string;
   text: string;
   sentAt: Date;
+  _id: string;
 };
 
 type RoomType = 'private' | 'group';
