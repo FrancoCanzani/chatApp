@@ -1,13 +1,13 @@
-import { User } from 'firebase/auth';
 import Image from 'next/image';
+import { useContext } from 'react';
+
+import { UserContext } from '@/app/page';
 
 import { ConnectionState } from './connectionState';
 
-export default function UserProfile({
-  user,
-}: {
-  user: User | null | undefined;
-}) {
+export default function UserProfile() {
+  const user = useContext(UserContext);
+
   return (
     <div className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center'>
       <div className='flex items-center justify-center gap-2'>

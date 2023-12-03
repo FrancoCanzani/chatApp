@@ -1,19 +1,20 @@
 'use client';
 
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
-import Button from '../button';
-import { User } from 'firebase/auth';
-import { Room } from '@/utils/types';
-import getRooms from '@/utils/functions/getRooms';
+import { useContext } from 'react';
 
+import { UserContext } from '@/app/page';
+import getRooms from '@/utils/functions/getRooms';
+import { Room } from '@/utils/types';
+
+import Button from '../button';
 export default function JoinRoomForm({
-  user,
   setRooms,
 }: {
-  user: User | null | undefined;
   setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
+  const user = useContext(UserContext);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);

@@ -1,8 +1,11 @@
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import useSWR from 'swr';
 
 import { socket } from '@/socket';
 import { cn } from '@/utils/functions/cn';
+import fetcher from '@/utils/functions/fetcher';
 import formatTime from '@/utils/functions/formatTime';
+import { shareRoomInvite } from '@/utils/functions/shareRoomInvite';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
@@ -11,13 +14,27 @@ export default function Rooms({
   currentRoom,
   setCurrentRoom,
   lastMessages,
+  setLastMessages,
 }: {
   rooms: Room[];
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   lastMessages: { [key: string]: Message };
+  setLastMessages: Dispatch<SetStateAction<{ [key: string]: Message }>>;
 }) {
   const { user, loading, error: authError } = useAuth();
+
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+  const { data, error: swrError } = useSWR(
+    user ? `${API_URL}/rooms/last-messages/${user.uid}` : null,
+    fetcher
+  );
+
+  useEffect(() => {
+    if (data) {
+      setLastMessages(data);
+    }
+  }, [data]);
 
   function handleJoinRoom(room: Room) {
     if (room._id) {
@@ -47,34 +64,36 @@ export default function Rooms({
   }
 
   return (
-    <div className='w-full ring-2 ring-gray-100 bg-gray-50 border p-2 border-gray-100 shadow-gray-100 flex justify-between rounded-md items-center flex-col'>
-      <h2 className='text-xs mb-1 pl-0.5 w-full text-start font-semibold'>
-        Rooms
-      </h2>
-      <ul className='flex flex-1 flex-col gap-y-2 justify-start w-full items-start'>
+    <div className='w-full border-t border-gray-200 flex justify-between items-center flex-col'>
+      <ul className='flex flex-1 flex-col justify-start w-full items-start'>
         {rooms.map((room: Room) => (
           <li
             key={room._id}
             onClick={() => handleJoinRoom(room)}
             className={cn(
-              'bg-gray-200 text-xs cursor-pointer text-gray-800 flex flex-col gap-y-2 p-2 w-full rounded-md text-start font-semibold',
+              'flex flex-col border-b min-h-[4rem] cursor-pointer border-gray-200 max-w-full w-full py-3 px-2',
               {
-                'ring-1 ring-gray-300': room._id == currentRoom?._id,
+                'bg-gray-100': room._id == currentRoom?._id,
               }
             )}
           >
-            <div className='flex items-center justify-between'>
-              <p>{room.name}</p>
-              <span
-                className={cn('h-2 w-2 rounded-full', {
-                  'bg-green-400': room._id == currentRoom?._id,
-                })}
-              ></span>
+            <div className='text-xs space-y-3 w-full rounded-md text-start font-semibold'>
+              <div className='flex space-x-1 items-center overflow-auto justify-between'>
+                <p className='overflow-hidden truncate'>{room.name}</p>
+                <button
+                  className='min-w-fit bg-gray-200 px-1 py-0.5 rounded-md z-10 text-[11px]'
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent triggering the parent's onClick
+                    shareRoomInvite(room);
+                  }}
+                >
+                  Invite
+                </button>
+              </div>
+              {lastMessages && lastMessages[room._id] && (
+                <LastMessage lastMessage={lastMessages[room._id]} />
+              )}
             </div>
-            <span className='text-[11px]'>Id: {room._id}</span>
-            {lastMessages && lastMessages[room._id] && (
-              <LastMessage lastMessage={lastMessages[room._id]} />
-            )}
           </li>
         ))}
       </ul>

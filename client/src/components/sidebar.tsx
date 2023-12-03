@@ -1,10 +1,16 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import useSWR from 'swr';
 
+import { UserContext } from '@/app/page';
 import fetcher from '@/utils/functions/fetcher';
-import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 import CreateRoomForm from './forms/createRoomForm';
@@ -16,17 +22,19 @@ export function Sidebar({
   currentRoom,
   setCurrentRoom,
   lastMessages,
+  setLastMessages,
 }: {
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   lastMessages: { [key: string]: Message };
+  setLastMessages: Dispatch<SetStateAction<{ [key: string]: Message }>>;
 }) {
   const [showSidebar, setShowSidebar] = useState(true);
   const [rooms, setRooms] = useState<Room[]>([]);
-  const { user, loading, error: authError } = useAuth();
-
+  const user = useContext(UserContext);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error, isLoading } = useSWR(
-    user ? `http://localhost:3000/rooms/participants/${user.uid}` : null,
+    user ? `${API_URL}/rooms/participants/${user.uid}` : null,
     fetcher
   );
 
@@ -40,16 +48,17 @@ export function Sidebar({
     <aside
       className={`${
         showSidebar ? 'w-[34rem]' : 'hidden'
-      } border-r flex flex-col gap-2 p-2 border-gray-50 rounded-md overflow-auto`}
+      } border-r flex flex-col gap-2 border-gray-200 overflow-auto`}
     >
-      <UserProfile user={user} />
-      <CreateRoomForm user={user} setRooms={setRooms} />
-      <JoinRoomForm user={user} setRooms={setRooms} />
+      <UserProfile />
+      <CreateRoomForm setRooms={setRooms} />
+      <JoinRoomForm setRooms={setRooms} />
       <Rooms
         currentRoom={currentRoom}
         rooms={rooms}
         setCurrentRoom={setCurrentRoom}
         lastMessages={lastMessages}
+        setLastMessages={setLastMessages}
       />
     </aside>
   );

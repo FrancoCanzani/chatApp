@@ -1,13 +1,20 @@
 'use client';
 
 import { ArrowDownToLine } from 'lucide-react';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import useSWR from 'swr';
 
+import { UserContext } from '@/app/page';
 import { cn } from '@/utils/functions/cn';
 import fetcher from '@/utils/functions/fetcher';
 import formatTime from '@/utils/functions/formatTime';
-import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 import { ChatObserverTarget } from './chatObserverTarget';
@@ -23,11 +30,10 @@ export function Messages({
 }) {
   const [limit, setLimit] = useState(1);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const { user, loading, error: authError } = useAuth();
+  const user = useContext(UserContext);
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error, isLoading } = useSWR(
-    currentRoom
-      ? `http://localhost:3000/messages/${currentRoom._id}/${limit}`
-      : null,
+    currentRoom ? `${API_URL}/messages/${currentRoom._id}/${limit}` : null,
     fetcher
   );
   const roomMessages = messages.filter(
@@ -73,8 +79,23 @@ export function Messages({
               'justify-end': user?.uid == message.senderId,
             })}
           >
-            <div className='rounded-md mb-2 shadow-sm border max-w-full lg:max-w-xl px-2 py-1 flex flex-col bg-gray-50'>
-              <div>
+            <div
+              className={cn(
+                'mb-2 rounded-t-md shadow-sm border max-w-full lg:max-w-xl px-2 py-1 flex flex-col bg-gray-50',
+                {
+                  'rounded-l-md': message.senderId == user?.uid,
+                },
+                { 'rounded-r-md': message.senderId != user?.uid }
+              )}
+            >
+              <div
+                className={cn(
+                  'text-xs w-full space-x-1 font-medium my-1 flex items-center',
+                  {
+                    'justify-end': message.senderId == user?.uid,
+                  }
+                )}
+              >
                 <span className='text-xs font-medium my-1'>
                   {message.senderId != user?.uid
                     ? `${message.senderDisplayName}, `

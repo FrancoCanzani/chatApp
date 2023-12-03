@@ -1,9 +1,10 @@
 'use client';
 
-import { User } from 'firebase/auth';
 import { ChangeEvent } from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { useContext } from 'react';
 
+import { UserContext } from '@/app/page';
 import getRooms from '@/utils/functions/getRooms';
 import handleCreateRoom from '@/utils/functions/handleCreateRoom';
 import { NewRoom, Room, RoomType } from '@/utils/types';
@@ -11,13 +12,12 @@ import { NewRoom, Room, RoomType } from '@/utils/types';
 import Button from '../button';
 
 export default function CreateRoomForm({
-  user,
   setRooms,
 }: {
-  user: User | null | undefined;
   setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
+  const user = useContext(UserContext);
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);

@@ -1,9 +1,8 @@
 'use client';
 
-import { getAuth } from 'firebase/auth';
-import { useEffect, useState } from 'react';
+import { getAuth, User } from 'firebase/auth';
+import { createContext, useEffect, useState } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import useSWR from 'swr';
 
 import Chat from '@/components/chat';
 import Footer from '@/components/footer';
@@ -12,8 +11,9 @@ import { Sidebar } from '@/components/sidebar';
 import { socket } from '@/socket';
 import checkIfUserExists from '@/utils/functions/checkIfUserExists';
 import createNewUser from '@/utils/functions/createNewUser';
-import fetcher from '@/utils/functions/fetcher';
 import { Message, Room } from '@/utils/types';
+
+export const UserContext = createContext<User | null | undefined>(null);
 
 import { app } from '../firebase';
 
@@ -25,17 +25,6 @@ export default function App() {
   const [lastMessages, setLastMessages] = useState<{ [key: string]: Message }>(
     {}
   );
-
-  const { data, error: swrError } = useSWR(
-    user ? `http://localhost:3000/rooms/last-messages/${user.uid}` : null,
-    fetcher
-  );
-
-  useEffect(() => {
-    if (data) {
-      setLastMessages(data);
-    }
-  }, [data]);
 
   useEffect(() => {
     const handleMessageToRoom = (msg: Message) => {
@@ -71,21 +60,24 @@ export default function App() {
   }, [user]);
 
   return (
-    <div className='flex flex-col h-screen w-screen bg-softBlue dark:bg-zinc-900'>
-      <Header />
-      <div className='flex flex-1 overflow-hidden'>
-        <Sidebar
-          currentRoom={currentRoom}
-          setCurrentRoom={setCurrentRoom}
-          lastMessages={lastMessages}
-        />
-        <Chat
-          currentRoom={currentRoom}
-          messages={messages}
-          setMessages={setMessages}
-        />
+    <UserContext.Provider value={user}>
+      <div className='flex flex-col h-screen w-screen bg-softBlue dark:bg-zinc-900'>
+        <Header />
+        <div className='flex flex-1 overflow-hidden'>
+          <Sidebar
+            currentRoom={currentRoom}
+            setCurrentRoom={setCurrentRoom}
+            lastMessages={lastMessages}
+            setLastMessages={setLastMessages}
+          />
+          <Chat
+            currentRoom={currentRoom}
+            messages={messages}
+            setMessages={setMessages}
+          />
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+    </UserContext.Provider>
   );
 }

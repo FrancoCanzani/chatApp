@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 import { Message, Room } from '../utils/types';
 import { MessageForm } from './forms/messageForm';
