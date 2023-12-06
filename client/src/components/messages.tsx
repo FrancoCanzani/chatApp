@@ -1,12 +1,10 @@
 'use client';
 
-import { ArrowDownToLine } from 'lucide-react';
 import {
   Dispatch,
   SetStateAction,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from 'react';
 import useSWR from 'swr';
@@ -29,7 +27,6 @@ export function Messages({
   currentRoom: Room | null;
 }) {
   const [limit, setLimit] = useState(1);
-  const [showScrollButton, setShowScrollButton] = useState(false);
   const user = useContext(UserContext);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error, isLoading } = useSWR(
@@ -46,27 +43,11 @@ export function Messages({
     }
   }, [data]);
 
-  const bottomRef = useRef<null | HTMLDivElement>(null);
-
-  function handleScrollToBottom() {
-    if (bottomRef.current) {
-      bottomRef.current.scrollIntoView({
-        behavior: 'instant',
-        block: 'end',
-      });
-    }
-    // There has to be a delay because the scroll to bottom triggers the on scroll
-    setTimeout(() => {
-      setShowScrollButton(false);
-    }, 50);
-  }
-
   return (
     <div
       className={
         'w-full h-full px-2 flex flex-col-reverse scroller overflow-auto'
       }
-      onScroll={() => setShowScrollButton(true)}
     >
       <div className='scroller-content'>
         {data && !data.isEndOfList && (
@@ -109,16 +90,6 @@ export function Messages({
             </div>
           </div>
         ))}
-        {showScrollButton && (
-          <button
-            className='sticky bottom-3 left-1/2 bg-gray-100 rounded-full p-2 -translate-x-1/2'
-            onClick={handleScrollToBottom}
-            aria-label='scroll to bottom'
-          >
-            <ArrowDownToLine size={20} />
-          </button>
-        )}
-        <div ref={bottomRef} />
       </div>
     </div>
   );

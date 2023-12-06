@@ -66,7 +66,7 @@ export function MessageForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className='w-full bottom-0 border-t-2 z-10 border-gray-300 bg-gray-200 mt-2 py-2'
+      className='w-full bottom-0 border-t-2 z-10 border-gray-200300 bg-gray-200 mt-2 py-2'
     >
       <div className='w-5/6 space-x-2 inset-x-0 mx-auto flex items-center justify-center'>
         <input

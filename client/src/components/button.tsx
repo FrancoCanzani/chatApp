@@ -1,5 +1,5 @@
-import React, { Ref, forwardRef } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
+import React, { forwardRef, Ref } from 'react';
 
 const button = cva('button', {
   variants: {
@@ -7,13 +7,13 @@ const button = cva('button', {
       primary: [
         'ring',
         'border',
-        'border-gray-200',
+        'border-gray-200200',
         'ring-gray-50',
         'rounded-md',
-        'border-gray-400',
+        'border-gray-200400',
       ],
       send: ['bg-black', 'text-white', 'rounded-md', 'hover:text-gray-100'],
-      submit: ['rounded-md', 'bg-black', 'hover:bg-gray-700', 'text-white'],
+      submit: ['bg-black', 'hover:bg-gray-900', 'text-white', 'min-w-[4rem]'],
     },
     size: {
       small: ['text-xs', 'p-1'],

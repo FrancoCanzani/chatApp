@@ -20,7 +20,7 @@ export default function Header() {
   const provider = new GoogleAuthProvider();
 
   return (
-    <header className='flex w-full items-center justify-between px-6 py-4 border-b border-sky-50 rounded-xl'>
+    <header className='flex w-full items-center justify-between px-6 py-4 border-b border-gray-200'>
       <div className='flex items-center justify-center space-x-1'>
         <Image src={'/logo.png'} alt='logo' width={40} height={40} />
         <h1 className='font-semibold text-zinc-900 dark:text-zinc-50'>

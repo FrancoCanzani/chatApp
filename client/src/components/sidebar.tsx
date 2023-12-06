@@ -23,13 +23,16 @@ export function Sidebar({
   setCurrentRoom,
   lastMessages,
   setLastMessages,
+  showSidebar,
+  setShowSidebar,
 }: {
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   lastMessages: { [key: string]: Message };
   setLastMessages: Dispatch<SetStateAction<{ [key: string]: Message }>>;
+  showSidebar: boolean;
+  setShowSidebar: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [showSidebar, setShowSidebar] = useState(true);
   const [rooms, setRooms] = useState<Room[]>([]);
   const user = useContext(UserContext);
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -44,22 +47,39 @@ export function Sidebar({
     }
   }, [user, data]);
 
+  // Effect for automatically closing the sidebar when the current room changes
+  useEffect(() => {
+    if (currentRoom) {
+      setShowSidebar(false);
+    }
+  }, [currentRoom]);
+
   return (
-    <aside
-      className={`${
-        showSidebar ? 'w-[34rem]' : 'hidden'
-      } border-r flex flex-col gap-2 border-gray-200 overflow-auto`}
-    >
-      <UserProfile />
-      <CreateRoomForm setRooms={setRooms} />
-      <JoinRoomForm setRooms={setRooms} />
-      <Rooms
-        currentRoom={currentRoom}
-        rooms={rooms}
-        setCurrentRoom={setCurrentRoom}
-        lastMessages={lastMessages}
-        setLastMessages={setLastMessages}
-      />
-    </aside>
+    <>
+      <button
+        className='absolute sm:hidden z-10 left-1 top-11'
+        onClick={() => setShowSidebar(!showSidebar)}
+      >
+        Open/close
+      </button>
+      <aside
+        className={`${
+          showSidebar
+            ? 'flex w-full sm:w-2/5 md:w-1/4 '
+            : 'hidden sm:w-2/5 md:w-1/4 sm:flex'
+        } relative border-x flex-col border-gray-200 overflow-auto`}
+      >
+        <UserProfile />
+        <CreateRoomForm setRooms={setRooms} />
+        <JoinRoomForm setRooms={setRooms} />
+        <Rooms
+          currentRoom={currentRoom}
+          rooms={rooms}
+          setCurrentRoom={setCurrentRoom}
+          lastMessages={lastMessages}
+          setLastMessages={setLastMessages}
+        />
+      </aside>
+    </>
   );
 }

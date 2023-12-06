@@ -1,8 +1,10 @@
+import { ChevronDown } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { socket } from '@/socket';
 import { cn } from '@/utils/functions/cn';
+import { copyToClipboard } from '@/utils/functions/copyToClipboard';
 import fetcher from '@/utils/functions/fetcher';
 import formatTime from '@/utils/functions/formatTime';
 import { shareRoomInvite } from '@/utils/functions/shareRoomInvite';
@@ -64,14 +66,14 @@ export default function Rooms({
   }
 
   return (
-    <div className='w-full border-t border-gray-200 flex justify-between items-center flex-col'>
+    <div className='w-full border-gray-200200 flex justify-between items-center flex-col'>
       <ul className='flex flex-1 flex-col justify-start w-full items-start'>
         {rooms.map((room: Room) => (
           <li
             key={room._id}
             onClick={() => handleJoinRoom(room)}
             className={cn(
-              'flex flex-col border-b min-h-[4rem] cursor-pointer border-gray-200 max-w-full w-full py-3 px-2',
+              'flex flex-col relative border-b min-h-[4rem] cursor-pointer border-gray-200200 max-w-full w-full py-3 px-2',
               {
                 'bg-gray-100': room._id == currentRoom?._id,
               }
@@ -80,15 +82,26 @@ export default function Rooms({
             <div className='text-xs space-y-3 w-full rounded-md text-start font-semibold'>
               <div className='flex space-x-1 items-center overflow-auto justify-between'>
                 <p className='overflow-hidden truncate'>{room.name}</p>
-                <button
-                  className='min-w-fit bg-gray-200 px-1 py-0.5 rounded-md z-10 text-[11px]'
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent triggering the parent's onClick
-                    shareRoomInvite(room);
-                  }}
-                >
-                  Invite
-                </button>
+                <div className='space-x-2'>
+                  <button
+                    className='min-w-max bg-gray-200 px-1 py-0.5 rounded-sm text-[11px]'
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the parent's onClick
+                      copyToClipboard(room._id);
+                    }}
+                  >
+                    Copy ID
+                  </button>
+                  <button
+                    className='min-w-max bg-gray-200 px-1 py-0.5 rounded-sm text-[11px]'
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent triggering the parent's onClick
+                      shareRoomInvite(room);
+                    }}
+                  >
+                    Invite
+                  </button>
+                </div>
               </div>
               {lastMessages && lastMessages[room._id] && (
                 <LastMessage lastMessage={lastMessages[room._id]} />

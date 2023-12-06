@@ -25,6 +25,7 @@ export default function App() {
   const [lastMessages, setLastMessages] = useState<{ [key: string]: Message }>(
     {}
   );
+  const [showSidebar, setShowSidebar] = useState(true);
 
   useEffect(() => {
     const handleMessageToRoom = (msg: Message) => {
@@ -69,11 +70,15 @@ export default function App() {
             setCurrentRoom={setCurrentRoom}
             lastMessages={lastMessages}
             setLastMessages={setLastMessages}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
           />
           <Chat
             currentRoom={currentRoom}
             messages={messages}
             setMessages={setMessages}
+            showSidebar={showSidebar}
+            setShowSidebar={setShowSidebar}
           />
         </div>
         <Footer />
