@@ -1,11 +1,19 @@
+import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
-import { useContext } from 'react';
+import { Dispatch, SetStateAction, useContext } from 'react';
 
 import { UserContext } from '@/app/page';
 
 import { ConnectionState } from './connectionState';
+import { OpenSidebarButton } from './openSidebarButton';
 
-export default function UserProfile() {
+export default function UserProfile({
+  showSidebar,
+  setShowSidebar,
+}: {
+  showSidebar: boolean;
+  setShowSidebar: Dispatch<SetStateAction<boolean>>;
+}) {
   const user = useContext(UserContext);
 
   return (
@@ -25,7 +33,15 @@ export default function UserProfile() {
           <p className='text-[10px] text-gray-600'>{user?.email}</p>
         </div>
       </div>
-      <ConnectionState />
+      <div className='flex items-center h-full'>
+        <ConnectionState />
+        <OpenSidebarButton
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        >
+          <ChevronLeft size={20} />
+        </OpenSidebarButton>
+      </div>
     </div>
   );
 }

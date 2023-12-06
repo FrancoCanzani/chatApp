@@ -20,7 +20,12 @@ export default function Chat({
   setShowSidebar: Dispatch<SetStateAction<boolean>>;
 }) {
   if (!currentRoom) {
-    return <RoomSelectionPrompt showSidebar={showSidebar} />;
+    return (
+      <RoomSelectionPrompt
+        showSidebar={showSidebar}
+        setShowSidebar={setShowSidebar}
+      />
+    );
   }
 
   return (

@@ -1,7 +1,10 @@
+import { toast } from 'sonner';
+
 export async function copyToClipboard(text: string) {
   try {
-    const copiedText = await navigator.clipboard.writeText(text);
+    await navigator.clipboard.writeText(text);
+    toast.success('Room ID copied to clipboard');
   } catch (error) {
-    console.log(error);
+    toast.error('Error copying to clipboard');
   }
 }
