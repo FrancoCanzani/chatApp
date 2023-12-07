@@ -46,7 +46,7 @@ export default function Chat({
         setMessages={setMessages}
         currentRoom={currentRoom}
       />
-      <MessageForm setMessages={setMessages} currentRoom={currentRoom} />
+      <MessageForm currentRoom={currentRoom} />
     </main>
   );
 }

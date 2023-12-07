@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/functions/cn';
+import { cn } from '@/utils/helpers/cn';
 import useConnectSocket from '@/utils/hooks/useConnectSocket';
 
 export function ConnectionState() {

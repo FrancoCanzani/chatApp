@@ -1,13 +1,12 @@
-import { ChevronDown } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect } from 'react';
 import useSWR from 'swr';
 
 import { socket } from '@/socket';
-import { cn } from '@/utils/functions/cn';
-import { copyToClipboard } from '@/utils/functions/copyToClipboard';
-import fetcher from '@/utils/functions/fetcher';
-import formatTime from '@/utils/functions/formatTime';
-import { shareRoomInvite } from '@/utils/functions/shareRoomInvite';
+import { cn } from '@/utils/helpers/cn';
+import { copyToClipboard } from '@/utils/helpers/copyToClipboard';
+import fetcher from '@/utils/helpers/fetcher';
+import formatTime from '@/utils/helpers/formatTime';
+import { shareRoomInvite } from '@/utils/helpers/shareRoomInvite';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 

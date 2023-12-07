@@ -9,8 +9,8 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { Sidebar } from '@/components/sidebar';
 import { socket } from '@/socket';
-import checkIfUserExists from '@/utils/functions/checkIfUserExists';
-import createNewUser from '@/utils/functions/createNewUser';
+import checkIfUserExists from '@/utils/helpers/checkIfUserExists';
+import createNewUser from '@/utils/helpers/createNewUser';
 import { Message, Room } from '@/utils/types';
 
 export const UserContext = createContext<User | null | undefined>(null);

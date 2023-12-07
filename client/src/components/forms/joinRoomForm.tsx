@@ -4,7 +4,7 @@ import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { useContext } from 'react';
 
 import { UserContext } from '@/app/page';
-import getRooms from '@/utils/functions/getRooms';
+import getRooms from '@/utils/helpers/getRooms';
 import { Room } from '@/utils/types';
 
 import Button from '../button';

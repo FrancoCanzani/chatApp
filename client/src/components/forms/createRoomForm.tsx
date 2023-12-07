@@ -5,8 +5,8 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import { useContext } from 'react';
 
 import { UserContext } from '@/app/page';
-import getRooms from '@/utils/functions/getRooms';
-import handleCreateRoom from '@/utils/functions/handleCreateRoom';
+import getRooms from '@/utils/helpers/getRooms';
+import handleCreateRoom from '@/utils/helpers/handleCreateRoom';
 import { NewRoom, Room, RoomType } from '@/utils/types';
 
 import Button from '../button';

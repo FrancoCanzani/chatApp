@@ -2,7 +2,7 @@ import { Users2 } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-import { cn } from '@/utils/functions/cn';
+import { cn } from '@/utils/helpers/cn';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { Room } from '@/utils/types';
 import { DbUser } from '@/utils/types';

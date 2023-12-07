@@ -10,7 +10,7 @@ import {
 import useSWR from 'swr';
 
 import { UserContext } from '@/app/page';
-import fetcher from '@/utils/functions/fetcher';
+import fetcher from '@/utils/helpers/fetcher';
 import { Message, Room } from '@/utils/types';
 
 import CreateRoomForm from './forms/createRoomForm';

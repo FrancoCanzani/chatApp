@@ -28,12 +28,12 @@ export default function Header() {
         </h1>
       </div>
       {user ? (
-        <div className='text-xs font-semibold space-x-3'>
+        <div className='text-sm font-semibold space-x-3'>
           <span className='bg-gray-50 px-2 py-1 rounded-md'>
             {user.displayName}
           </span>
           <button
-            className='bg-red-100 px-2 py-0.5 hover:bg-red-200 rounded-md'
+            className='bg-red-100 px-2 py-0.5 hover:bg-red-200 rounded-sm'
             onClick={() => signOut(auth)}
           >
             Sign Out
@@ -41,7 +41,7 @@ export default function Header() {
         </div>
       ) : (
         <button
-          className='text-xs bg-gray-50 px-2 py-1 rounded-md'
+          className='text-sm bg-gray-50 px-2 py-1 rounded-sm'
           onClick={() => signInWithRedirect(auth, provider)}
         >
           Sign In

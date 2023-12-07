@@ -10,9 +10,9 @@ import {
 import useSWR from 'swr';
 
 import { UserContext } from '@/app/page';
-import { cn } from '@/utils/functions/cn';
-import fetcher from '@/utils/functions/fetcher';
-import formatTime from '@/utils/functions/formatTime';
+import { cn } from '@/utils/helpers/cn';
+import fetcher from '@/utils/helpers/fetcher';
+import formatTime from '@/utils/helpers/formatTime';
 import { Message, Room } from '@/utils/types';
 
 import { ChatObserverTarget } from './chatObserverTarget';
@@ -33,6 +33,7 @@ export function Messages({
     currentRoom ? `${API_URL}/messages/${currentRoom._id}/${limit}` : null,
     fetcher
   );
+
   const roomMessages = messages.filter(
     (message) => message.roomId == currentRoom?._id
   );
@@ -44,11 +45,7 @@ export function Messages({
   }, [data]);
 
   return (
-    <div
-      className={
-        'w-full h-full px-2 flex flex-col-reverse scroller overflow-auto'
-      }
-    >
+    <div className='w-full h-full my-2 px-2 flex flex-col-reverse scroller overflow-auto'>
       <div className='scroller-content'>
         {data && !data.isEndOfList && (
           <ChatObserverTarget limit={limit} setLimit={setLimit} />
