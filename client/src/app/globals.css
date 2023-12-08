@@ -33,3 +33,8 @@
 .scroller-content .item {
   transform: translateZ(0); /* Fixes Safari iOS bug */
 }
+
+/* Dialogs take a place in the dom if any display is set when not open  */
+dialog[open] {
+  display: flex;
+}

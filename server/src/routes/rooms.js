@@ -7,14 +7,13 @@ export const roomsRouter = Router();
 roomsRouter.get('/rooms/participants/:participantId', async (req, res) => {
   const participantId = req.params.participantId;
 
-  try {
-    const rooms = await Room.find({ participants: participantId });
+  // Todo: add validation for participantId here
 
-    if (rooms.length > 0) {
-      res.status(200).json(rooms);
-    } else {
-      res.status(404).json({ message: 'No rooms found for this participant' });
-    }
+  try {
+    const rooms = await Room.find({ 'participants.id': participantId });
+
+    // if no rooms are found, return an empty array with a 200 status code
+    res.status(200).json(rooms);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
@@ -22,21 +21,20 @@ roomsRouter.get('/rooms/participants/:participantId', async (req, res) => {
 });
 
 roomsRouter.post('/rooms', async (req, res) => {
-  const { roomName, roomType, participants, administrators, creatorId } =
-    req.body;
+  const { name, type, participants, administrators, creatorUid } = req.body;
 
   // Validate input
-  if (!roomName || !roomType || !creatorId) {
+  if (!name || !type || !creatorUid) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
   try {
     const newRoom = new Room({
-      name: roomName,
-      type: roomType,
-      participants: participants,
-      administrators: administrators,
-      createdBy: creatorId,
+      name,
+      type,
+      participants,
+      administrators,
+      createdBy: creatorUid,
       createdAt: new Date(),
     });
 
@@ -89,54 +87,23 @@ roomsRouter.patch(
   }
 );
 
-roomsRouter.patch(
-  '/rooms/:roomId/add-participant/:participantId',
-  async (req, res) => {
-    const roomId = req.params.roomId;
-    const participantId = req.params.participantId;
+roomsRouter.patch('/rooms/:roomId/participants', async (req, res) => {
+  const roomId = req.params.roomId;
+  const { participant } = req.body;
 
-    try {
-      if (!roomId) {
-        return res.status(400).json({ error: 'Room ID is required' });
-      }
-
-      const room = await Room.findOne({ _id: roomId });
-      if (!room) {
-        return res.status(404).json({ error: 'Room not found' });
-      }
-
-      await Room.updateOne(
-        { _id: roomId },
-        { $addToSet: { participants: participantId } }
-      );
-
-      res.status(200).json({
-        message: `Participant ${participantId} added to room ${roomId}`,
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal server error' });
-    }
+  if (!roomId || !participant) {
+    return res
+      .status(400)
+      .json({ error: 'Room ID and Participant data are required' });
   }
-);
-
-roomsRouter.get('/rooms/last-messages/:participantId', async (req, res) => {
-  const participantId = req.params.participantId;
 
   try {
-    const rooms = await Room.find({ participants: participantId });
-    let lastMessages = {};
+    await Room.updateOne(
+      { _id: roomId },
+      { $addToSet: { participants: participant } }
+    );
 
-    for (const room of rooms) {
-      const lastMessage = await Message.findOne({ roomId: room._id }).sort({
-        sentAt: -1,
-      });
-      if (lastMessage) {
-        lastMessages[room._id] = lastMessage;
-      }
-    }
-
-    res.status(200).json(lastMessages);
+    res.status(200).json({ message: 'Participant added successfully' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

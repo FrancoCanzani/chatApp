@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function useFetchUser(userId: string) {
   const [user, setUser] = useState(null);

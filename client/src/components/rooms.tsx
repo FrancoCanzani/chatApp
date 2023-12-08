@@ -27,7 +27,7 @@ export default function Rooms({
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error: swrError } = useSWR(
-    user ? `${API_URL}/rooms/last-messages/${user.uid}` : null,
+    user ? `${API_URL}/messages/last-messages/${user.uid}` : null,
     fetcher
   );
 

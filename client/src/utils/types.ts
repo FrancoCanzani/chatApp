@@ -9,10 +9,17 @@ type Message = {
 
 type RoomType = 'private' | 'group';
 
+interface Participant {
+  name: string;
+  email: string;
+  photo: string | null;
+  id: string;
+}
+
 interface Room {
   name: string;
-  type: RoomType;
-  participants: string[]; // Array of participant IDs
+  type: 'private' | 'group';
+  participants: Participant[]; // Array of participant IDs
   administrators: string[]; // Array of administrator IDs
   createdBy: string; // Creator ID
   createdAt: Date;
@@ -20,12 +27,13 @@ interface Room {
   _id: string;
 }
 
-type NewRoom = {
-  roomName: string;
-  roomType: 'private' | 'group';
-  participants: string[];
-  administrators: string[];
-  creatorId: string;
+type NewRoom = Omit<
+  Room,
+  'createdAt' | 'updatedAt' | '_id' | 'name' | 'type' | 'createdBy'
+> & {
+  name: string;
+  type: 'private' | 'group';
+  creatorUid: string;
 };
 
 type DbUser = {
@@ -41,4 +49,4 @@ type DbUser = {
   __v: number;
 };
 
-export type { DbUser, Message, NewRoom, Room, RoomType };
+export type { DbUser, Message, NewRoom, Participant, Room, RoomType };

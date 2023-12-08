@@ -5,6 +5,7 @@ import { useContext } from 'react';
 
 import { UserContext } from '@/app/page';
 import getRooms from '@/utils/helpers/getRooms';
+import { Participant } from '@/utils/types';
 import { Room } from '@/utils/types';
 
 import Button from '../button';
@@ -20,28 +21,43 @@ export default function JoinRoomForm({
     setInput(e.target.value);
   }
 
-  async function handleJoinRoom(userId: string) {
+  async function handleJoinRoom(roomId: string, participant: Participant) {
     try {
       const res = await fetch(
-        `http://localhost:3000/rooms/${input}/add-participant/${userId}`,
+        `http://localhost:3000/rooms/${roomId}/participants`,
         {
           method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ participant }),
         }
       );
 
       if (res.ok) {
         setInput('');
+      } else {
+        const errorResponse = await res.json();
+        console.error('Error joining room:', errorResponse);
       }
     } catch (error) {
       console.error('Error joining room:', error);
     }
   }
+
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
         if (user) {
-          await handleJoinRoom(user?.uid);
+          const participant = {
+            name: user.displayName ?? 'Unknown Name',
+            email: user.email ?? 'No Email',
+            photo: user.photoURL ?? 'Default Photo URL',
+            id: user.uid, // uid is always non-null for a logged-in user
+          };
+
+          await handleJoinRoom(input, participant);
           const rooms = await getRooms(user.uid);
           setRooms(rooms);
           setInput('');

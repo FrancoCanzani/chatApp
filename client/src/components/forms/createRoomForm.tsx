@@ -7,7 +7,7 @@ import { useContext } from 'react';
 import { UserContext } from '@/app/page';
 import getRooms from '@/utils/helpers/getRooms';
 import handleCreateRoom from '@/utils/helpers/handleCreateRoom';
-import { NewRoom, Room, RoomType } from '@/utils/types';
+import { NewRoom, Participant, Room, RoomType } from '@/utils/types';
 
 import Button from '../button';
 
@@ -29,13 +29,21 @@ export default function CreateRoomForm({
         e.preventDefault();
 
         if (user) {
-          const roomData: NewRoom = {
-            roomName: input,
-            roomType: 'private' as RoomType,
-            participants: [user?.uid],
-            administrators: [user?.uid],
-            creatorId: user?.uid,
+          const participant: Participant = {
+            name: user.displayName ?? 'Unknown Name',
+            email: user.email ?? 'No Email',
+            photo: user.photoURL,
+            id: user.uid, // uid is always non-null for a logged-in user
           };
+
+          const roomData: NewRoom = {
+            name: input,
+            type: 'private' as RoomType,
+            participants: [participant],
+            administrators: [user?.uid],
+            creatorUid: user?.uid,
+          };
+
           const newRoom = await handleCreateRoom(roomData);
 
           if (newRoom) {

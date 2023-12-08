@@ -20,22 +20,6 @@ usersRouter.get('/users/:userId', async (req, res) => {
   }
 });
 
-usersRouter.post('/users/by-ids', async (req, res) => {
-  const userIds = req.body.userIds; // array of userIds
-
-  try {
-    const users = await User.find({ userId: { $in: userIds } });
-    if (users.length > 0) {
-      res.status(200).json(users);
-    } else {
-      res.status(404).json({ message: 'No users found' });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
 usersRouter.post('/users', async (req, res) => {
   const { displayName, userId, email } = req.body;
 
