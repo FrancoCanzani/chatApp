@@ -26,8 +26,9 @@ export default function Rooms({
   const { user, loading, error: authError } = useAuth();
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   const { data, error: swrError } = useSWR(
-    user ? `${API_URL}/messages/last-messages/${user.uid}` : null,
+    user ? `${API_URL}/messages/last/${user.uid}` : null,
     fetcher
   );
 
@@ -50,42 +51,55 @@ export default function Rooms({
     }
   }
 
-  function handleLeaveRoom(roomId: string | undefined) {
-    if (roomId) {
-      socket.emit('leaveRoom', {
-        roomId: roomId,
-        user: {
-          id: user?.uid,
-          name: user?.displayName,
-        },
-      });
-      setCurrentRoom(null);
-      // setRooms(rooms.filter((room) => room !== roomId));
+  async function handleLeaveRoom(roomId: string | undefined) {
+    if (roomId && user?.uid) {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/rooms/${roomId}/remove-participant/${user.uid}`,
+          {
+            method: 'PATCH',
+          }
+        );
+
+        if (res.ok) {
+          setCurrentRoom(null);
+        } else {
+          console.error('Error leaving room:', await res.json());
+        }
+      } catch (error) {
+        console.error('Error leaving room:', error);
+      }
     }
   }
 
   return (
-    <div className='w-full border-gray-200200 flex justify-between items-center flex-col'>
+    <div className='w-full border-gray-200 flex justify-between items-center flex-col'>
       <ul className='flex flex-1 flex-col justify-start w-full items-start'>
         {rooms.map((room: Room) => (
           <li
             key={room._id}
             onClick={() => handleJoinRoom(room)}
             className={cn(
-              'flex flex-col relative border-b min-h-[4rem] cursor-pointer border-gray-200200 max-w-full w-full py-3 px-2',
+              'flex flex-col relative border-b min-h-[4.5rem] p-2 cursor-pointer border-gray-200 max-w-full w-full',
               {
-                'bg-gray-100': room._id == currentRoom?._id,
+                'bg-gray-50': room._id == currentRoom?._id,
               }
             )}
           >
-            <div className='text-xs space-y-3 w-full rounded-md text-start font-semibold'>
+            <div
+              className={cn(
+                'text-xs space-y-3 w-full h-full rounded-md text-start'
+              )}
+            >
               <div className='flex space-x-1 items-center overflow-auto justify-between'>
-                <p className='overflow-hidden truncate'>{room.name}</p>
+                <p className='overflow-hidden font-semibold capitalize truncate'>
+                  {room.name}
+                </p>
                 <div className='space-x-2'>
                   <button
                     className='min-w-max bg-gray-200 px-1 py-0.5 rounded-sm text-[11px]'
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent triggering the parent's onClick
+                      e.stopPropagation();
                       copyToClipboard(room._id);
                     }}
                   >
@@ -94,11 +108,20 @@ export default function Rooms({
                   <button
                     className='min-w-max bg-gray-200 px-1 py-0.5 rounded-sm text-[11px]'
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent triggering the parent's onClick
+                      e.stopPropagation();
                       shareRoomInvite(room);
                     }}
                   >
                     Invite
+                  </button>
+                  <button
+                    className='bg-red-100 hover:bg-red-200 px-1 py-0.5'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleLeaveRoom(currentRoom?._id);
+                    }}
+                  >
+                    Leave
                   </button>
                 </div>
               </div>

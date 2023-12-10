@@ -62,7 +62,7 @@ export default function App() {
 
   return (
     <UserContext.Provider value={user}>
-      <div className='flex flex-col h-screen w-screen bg-softBlue dark:bg-zinc-900'>
+      <div className='flex flex-col h-screen w-screen'>
         <Header />
         <div className='flex flex-1 overflow-hidden'>
           <Sidebar

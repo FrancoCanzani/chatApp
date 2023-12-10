@@ -40,7 +40,13 @@ export function Messages({
 
   useEffect(() => {
     if (data && data.messages.length > 0) {
-      setMessages((prevMessages) => [...data.messages, ...prevMessages]);
+      setMessages((prevMessages) => {
+        const newMessages = data.messages.filter(
+          (newMessage: Message) =>
+            !prevMessages.some((msg) => msg._id === newMessage._id)
+        );
+        return [...newMessages, ...prevMessages];
+      });
     }
   }, [data]);
 

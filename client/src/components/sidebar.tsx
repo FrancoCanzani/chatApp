@@ -55,28 +55,23 @@ export function Sidebar({
   }, [currentRoom]);
 
   return (
-    <>
-      <aside
-        className={`${
-          showSidebar
-            ? 'flex w-full sm:w-2/5 md:w-1/4 '
-            : 'hidden sm:w-2/5 md:w-1/4 sm:flex'
-        } relative border-x flex-col border-gray-200 overflow-auto`}
-      >
-        <UserProfile
-          showSidebar={showSidebar}
-          setShowSidebar={setShowSidebar}
-        />
-        <CreateRoomForm setRooms={setRooms} />
-        <JoinRoomForm setRooms={setRooms} />
-        <Rooms
-          currentRoom={currentRoom}
-          rooms={rooms}
-          setCurrentRoom={setCurrentRoom}
-          lastMessages={lastMessages}
-          setLastMessages={setLastMessages}
-        />
-      </aside>
-    </>
+    <aside
+      className={`${
+        showSidebar
+          ? 'flex w-full md:w-2/5 lg:w-1/4 '
+          : 'hidden sm:w-2/5 lg:w-1/4 sm:flex'
+      } relative border-x flex-col border-gray-200 overflow-auto`}
+    >
+      <UserProfile showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
+      <CreateRoomForm setRooms={setRooms} />
+      <JoinRoomForm setRooms={setRooms} />
+      <Rooms
+        currentRoom={currentRoom}
+        rooms={rooms}
+        setCurrentRoom={setCurrentRoom}
+        lastMessages={lastMessages}
+        setLastMessages={setLastMessages}
+      />
+    </aside>
   );
 }

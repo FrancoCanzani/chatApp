@@ -1,6 +1,6 @@
 import { Users2 } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useRef, useState } from 'react';
 
 import { cn } from '@/utils/helpers/cn';
 import { useAuth } from '@/utils/hooks/useAuth';

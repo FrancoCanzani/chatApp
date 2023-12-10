@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { Room } from '../db/schemas/roomSchema.js';
-import { Message } from '../db/schemas/messageSchema.js';
 
 export const roomsRouter = Router();
 
@@ -65,17 +64,18 @@ roomsRouter.patch(
       }
 
       // Check if the participant exists in the room
-      if (!room.participants.includes(participantId)) {
+      const participantIndex = room.participants.findIndex(
+        (p) => p.id === participantId
+      );
+      if (participantIndex === -1) {
         return res
           .status(404)
           .json({ error: 'Participant not found in the room' });
       }
 
       // Remove participant from the room
-      await Room.updateOne(
-        { _id: roomId },
-        { $pull: { participants: participantId } }
-      );
+      room.participants.splice(participantIndex, 1);
+      await room.save();
 
       res.status(200).json({
         message: `Participant ${participantId} removed from room ${roomId}`,
