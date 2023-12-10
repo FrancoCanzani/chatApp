@@ -59,7 +59,7 @@ export function Sidebar({
       className={`${
         showSidebar
           ? 'flex w-full md:w-2/5 lg:w-1/4 '
-          : 'hidden sm:w-2/5 lg:w-1/4 sm:flex'
+          : 'hidden w-0 sm:w-2/5 lg:w-1/4 sm:flex'
       } relative border-x flex-col border-gray-200 overflow-auto`}
     >
       <UserProfile showSidebar={showSidebar} setShowSidebar={setShowSidebar} />

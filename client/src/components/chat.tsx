@@ -32,9 +32,9 @@ export default function Chat({
     <main
       className={`${
         showSidebar
-          ? 'hidden sm:flex md:w-3/4 sm:w-3/5'
-          : 'md:w-3/4 sm:w-3/5 w-full'
-      } overflow-hidden min-h-full flex justify-start items-start flex-col`}
+          ? 'hidden md:flex md:w-3/4 sm:w-3/5 w-full'
+          : 'md:w-3/4 sm:w-3/5 min-w-0 w-full'
+      } overflow-hidden min-h-full flex justify-start items-start flex-col transition-all duration-300`}
     >
       <RoomChatInfo
         currentRoom={currentRoom}
