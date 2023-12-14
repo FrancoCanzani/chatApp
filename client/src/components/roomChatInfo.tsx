@@ -34,7 +34,7 @@ export default function RoomChatInfo({
   };
 
   return (
-    <div className='flex min-h-[4rem] items-center w-full bg-gray-200'>
+    <div className='flex min-h-[4rem] items-center w-full bg-gray-100 border-b border-b-gray-200'>
       <OpenSidebarButton
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
@@ -42,7 +42,7 @@ export default function RoomChatInfo({
         <ChevronRight size={20} />
       </OpenSidebarButton>
       {currentRoom && (
-        <div className='flex-col gap-y-1 border-b-2 border-gray-200300 mb-2 font-normal flex w-full py-1 px-2 text-center text-xs'>
+        <div className='flex-col gap-y-1 min-h-[4rem] flex w-full py-1 px-2 text-center text-xs'>
           <div className='flex items-center justify-between w-full'>
             <dialog
               ref={roomDialog}
@@ -65,10 +65,7 @@ export default function RoomChatInfo({
                 Leave room
               </button>
             </dialog>
-            <button
-              onClick={openDialog}
-              className='font-semibold text-base hover:underline'
-            >
+            <button onClick={openDialog} className='text-base hover:underline'>
               {currentRoom.name}
             </button>
             <div className='flex items-center justify-center gap-x-1'>

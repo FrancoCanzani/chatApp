@@ -51,7 +51,7 @@ export function Messages({
   }, [data]);
 
   return (
-    <div className='w-full h-full my-2 px-2 flex flex-col-reverse scroller overflow-auto'>
+    <div className='w-full h-full px-2 pt-3 flex flex-col-reverse scroller overflow-auto'>
       <div className='scroller-content'>
         {data && !data.isEndOfList && (
           <ChatObserverTarget limit={limit} setLimit={setLimit} />
@@ -59,22 +59,22 @@ export function Messages({
         {roomMessages.map((message, index) => (
           <div
             key={index}
-            className={cn('flex item items-center justify-start', {
+            className={cn('flex item items-start justify-start', {
               'justify-end': user?.uid == message.senderId,
             })}
           >
             <div
               className={cn(
-                'mb-2 rounded-t-md shadow-sm border max-w-full lg:max-w-xl px-2 py-1 flex flex-col bg-gray-50',
+                'mb-2 rounded-t-md shadow-sm max-w-full lg:max-w-xl px-2 pb-1 flex flex-col',
                 {
-                  'rounded-l-md': message.senderId == user?.uid,
+                  'rounded-l-md bg-gray-50': message.senderId == user?.uid,
                 },
-                { 'rounded-r-md': message.senderId != user?.uid }
+                { 'rounded-r-md bg-sky-50': message.senderId != user?.uid }
               )}
             >
               <div
                 className={cn(
-                  'text-xs w-full space-x-1 font-medium my-1 flex items-center',
+                  'text-xs w-full space-x-1 font-medium mb-1 flex items-center',
                   {
                     'justify-end': message.senderId == user?.uid,
                   }
@@ -85,7 +85,7 @@ export function Messages({
                     ? `${message.senderDisplayName}, `
                     : 'You, '}
                 </span>
-                <span className='text-xs'>
+                <span className='text-xs font-light'>
                   {message.sentAt ? formatTime(message.sentAt) : '⏳'}
                 </span>
               </div>

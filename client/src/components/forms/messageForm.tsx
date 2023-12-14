@@ -50,17 +50,15 @@ export function MessageForm({ currentRoom }: { currentRoom: Room | null }) {
           onChange={(e) => setInput(e.target.value)}
           autoComplete='off'
           placeholder='Message'
-          className='rounded-sm text-sm w-4/5 px-4 outline-none py-2'
+          className='rounded-md text-sm w-4/5 px-4 outline-none py-2'
         />
-        <Button
+        <button
           type='submit'
           disabled={isLoading}
-          variant={'send'}
-          size={'medium'}
-          className='rounded-sm'
+          className='rounded-md p-[0.4rem] bg-black hover:opacity-90 text-white text-sm'
         >
           Send
-        </Button>
+        </button>
       </div>
     </form>
   );

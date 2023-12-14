@@ -12,8 +12,8 @@ export function RoomSelectionPrompt({
     <div
       className={`${
         showSidebar
-          ? 'hidden sm:flex sm:w-3/5 md:w-3/4'
-          : 'w-full sm:w-3/5 md:w-3/4'
+          ? 'hidden md:flex md:w-3/4 sm:w-3/5 w-full'
+          : 'md:w-3/4 sm:w-3/5 min-w-0 w-full'
       } overflow-hidden min-h-full flex justify-center items-center flex-col`}
     >
       <Image
