@@ -9,7 +9,7 @@ import {
 import Image from 'next/image';
 import { useContext } from 'react';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 
 import { app } from '../firebase';
 

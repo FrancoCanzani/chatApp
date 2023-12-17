@@ -3,7 +3,7 @@
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
 import { useContext } from 'react';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 import getRooms from '@/utils/helpers/getRooms';
 import { Participant } from '@/utils/types';
 import { Room } from '@/utils/types';

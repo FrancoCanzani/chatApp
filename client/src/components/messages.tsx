@@ -9,7 +9,7 @@ import {
 } from 'react';
 import useSWR from 'swr';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 import { cn } from '@/utils/helpers/cn';
 import fetcher from '@/utils/helpers/fetcher';
 import formatTime from '@/utils/helpers/formatTime';

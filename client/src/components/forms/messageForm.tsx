@@ -3,7 +3,7 @@
 import { FormEvent, useState } from 'react';
 import { useContext } from 'react';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 import { handleSendMessage } from '@/utils/helpers/handleSendMessage';
 import { Room } from '@/utils/types';
 

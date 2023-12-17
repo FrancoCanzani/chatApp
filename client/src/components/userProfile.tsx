@@ -2,7 +2,7 @@ import { ChevronLeft } from 'lucide-react';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useContext } from 'react';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 
 import { ConnectionState } from './connectionState';
 import { OpenSidebarButton } from './openSidebarButton';

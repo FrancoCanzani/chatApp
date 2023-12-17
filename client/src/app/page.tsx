@@ -1,88 +1,37 @@
-'use client';
+import Image from 'next/image';
+import Link from 'next/link';
 
-import { getAuth, User } from 'firebase/auth';
-import { createContext, useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
-
-import Chat from '@/components/chat';
-import Footer from '@/components/footer';
-import Header from '@/components/header';
-import { Sidebar } from '@/components/sidebar';
-import { socket } from '@/socket';
-import checkIfUserExists from '@/utils/helpers/checkIfUserExists';
-import createNewUser from '@/utils/helpers/createNewUser';
-import { Message, Room } from '@/utils/types';
-
-export const UserContext = createContext<User | null | undefined>(null);
-
-import { app } from '../firebase';
-
-export default function App() {
-  const auth = getAuth(app);
-  const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
-  const [user, loading, error] = useAuthState(auth);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [lastMessages, setLastMessages] = useState<{ [key: string]: Message }>(
-    {}
-  );
-  const [showSidebar, setShowSidebar] = useState(true);
-
-  useEffect(() => {
-    const handleMessageToRoom = (msg: Message) => {
-      setMessages((prevMessages) => [...prevMessages, msg]);
-      setLastMessages((prevLastMessages) => ({
-        ...prevLastMessages,
-        [msg.roomId]: msg,
-      }));
-    };
-
-    socket.on('messageToRoom', handleMessageToRoom);
-
-    return () => {
-      socket.off('messageToRoom', handleMessageToRoom);
-    };
-  }, []);
-
-  useEffect(() => {
-    // checks if a user exists in the DB, if not creates one
-    async function handleUser() {
-      if (user) {
-        const { displayName, email, uid } = user;
-        if (displayName && email && uid) {
-          const userExists = await checkIfUserExists(uid);
-          if (!userExists) {
-            await createNewUser(displayName, email, uid);
-          }
-        }
-      }
-    }
-
-    handleUser();
-  }, [user]);
-
+export default function Home() {
   return (
-    <UserContext.Provider value={user}>
-      <div className='flex flex-col h-screen w-screen'>
-        <Header />
-        <div className='flex flex-1 overflow-hidden'>
-          <Sidebar
-            currentRoom={currentRoom}
-            setCurrentRoom={setCurrentRoom}
-            lastMessages={lastMessages}
-            setLastMessages={setLastMessages}
-            showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
-          />
-          <Chat
-            currentRoom={currentRoom}
-            messages={messages}
-            setMessages={setMessages}
-            showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
-          />
+    <div className='bg-white'>
+      <header className='flex justify-between items-center p-6'>
+        <div className='flex items-center space-x-1'>
+          <Image src={'/logo.png'} alt='logo' width={40} height={40} />
+          <span className='font-semibold text-xl'>Boring Chat</span>
         </div>
-        <Footer />
-      </div>
-    </UserContext.Provider>
+        <Link href={'#'} className='text-gray-600 hover:text-gray-800'>
+          Sign in
+        </Link>
+      </header>
+      <main className='px-6 py-16 text-center leading-loose'>
+        <h1 className='text-6xl font-bold mb-6'>
+          Simplified Chatting – Back to Basics{' '}
+        </h1>
+        <p className='text-lg text-gray-600 mb-8'>
+          Rediscover the joy of simple, straightforward{' '}
+          <span className='underline'>messaging</span>
+        </p>
+        <div className='space-x-4'>
+          <Link
+            href={'#'}
+            className='bg-gray-800 hover:bg-gray-950 text-white p-3 rounded-md'
+          >
+            Start for free
+          </Link>
+          <button>Contribute →</button>
+        </div>
+      </main>
+      <footer></footer>
+    </div>
   );
 }

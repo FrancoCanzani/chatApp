@@ -4,7 +4,7 @@ import { ChangeEvent } from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { useContext } from 'react';
 
-import { UserContext } from '@/app/page';
+import { UserContext } from '@/app/chat/page';
 import getRooms from '@/utils/helpers/getRooms';
 import handleCreateRoom from '@/utils/helpers/handleCreateRoom';
 import { NewRoom, Participant, Room, RoomType } from '@/utils/types';
