@@ -1,23 +1,22 @@
 'use client';
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithRedirect,
-  signOut,
-} from 'firebase/auth';
+import { getAuth, signOut } from 'firebase/auth';
 import Image from 'next/image';
-import { useContext } from 'react';
+import { redirect } from 'next/navigation';
 
-import { UserContext } from '@/app/chat/page';
+import { useAuth } from '@/utils/hooks/useAuth';
 
 import { app } from '../firebase';
 
 export default function Header() {
-  const user = useContext(UserContext);
+  const { user, loading, error } = useAuth();
 
   const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+
+  const handleSignOut = () => {
+    signOut(auth);
+    redirect('/');
+  };
 
   return (
     <header className='flex w-full items-center justify-between px-6 py-4 border-b border-gray-200'>
@@ -27,25 +26,18 @@ export default function Header() {
           Boring Chat
         </h1>
       </div>
-      {user ? (
+      {user && (
         <div className='text-sm font-semibold space-x-3'>
           <span className='bg-gray-50 px-2 py-1 rounded-md'>
             {user.displayName}
           </span>
           <button
             className='bg-red-100 px-2 py-0.5 hover:bg-red-200 rounded-sm'
-            onClick={() => signOut(auth)}
+            onClick={handleSignOut}
           >
             Sign Out
           </button>
         </div>
-      ) : (
-        <button
-          className='text-sm bg-gray-50 px-2 py-1 rounded-sm'
-          onClick={() => signInWithRedirect(auth, provider)}
-        >
-          Sign In
-        </button>
       )}
     </header>
   );

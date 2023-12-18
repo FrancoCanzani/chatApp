@@ -1,10 +1,9 @@
 'use client';
 
 import { FormEvent, useState } from 'react';
-import { useContext } from 'react';
 
-import { UserContext } from '@/app/chat/page';
 import { handleSendMessage } from '@/utils/helpers/handleSendMessage';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Room } from '@/utils/types';
 
 import Button from '../button';
@@ -12,7 +11,7 @@ import Button from '../button';
 export function MessageForm({ currentRoom }: { currentRoom: Room | null }) {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');
-  const user = useContext(UserContext);
+  const { user, loading, error: authError } = useAuth();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();

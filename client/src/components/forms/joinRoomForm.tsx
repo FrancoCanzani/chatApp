@@ -1,10 +1,9 @@
 'use client';
 
 import { ChangeEvent, Dispatch, SetStateAction, useState } from 'react';
-import { useContext } from 'react';
 
-import { UserContext } from '@/app/chat/page';
 import getRooms from '@/utils/helpers/getRooms';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Participant } from '@/utils/types';
 import { Room } from '@/utils/types';
 
@@ -15,7 +14,7 @@ export default function JoinRoomForm({
   setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
-  const user = useContext(UserContext);
+  const { user, loading, error: authError } = useAuth();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);

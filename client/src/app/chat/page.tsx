@@ -1,8 +1,7 @@
 'use client';
 
-import { getAuth, User } from 'firebase/auth';
-import { createContext, useEffect, useState } from 'react';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { redirect } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 import Chat from '@/components/chat';
 import Footer from '@/components/footer';
@@ -11,21 +10,22 @@ import { Sidebar } from '@/components/sidebar';
 import { socket } from '@/socket';
 import checkIfUserExists from '@/utils/helpers/checkIfUserExists';
 import createNewUser from '@/utils/helpers/createNewUser';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
-export const UserContext = createContext<User | null | undefined>(null);
-
-import { app } from '../../firebase';
-
 export default function App() {
-  const auth = getAuth(app);
   const [currentRoom, setCurrentRoom] = useState<Room | null>(null);
-  const [user, loading, error] = useAuthState(auth);
+  const { user, loading, error } = useAuth();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [lastMessages, setLastMessages] = useState<{ [key: string]: Message }>(
     {}
   );
   const [showSidebar, setShowSidebar] = useState(true);
+
+  if (!user) {
+    redirect('/');
+  }
 
   useEffect(() => {
     const handleMessageToRoom = (msg: Message) => {
@@ -61,28 +61,26 @@ export default function App() {
   }, [user]);
 
   return (
-    <UserContext.Provider value={user}>
-      <div className='flex flex-col h-screen w-screen'>
-        <Header />
-        <div className='flex flex-1 overflow-hidden'>
-          <Sidebar
-            currentRoom={currentRoom}
-            setCurrentRoom={setCurrentRoom}
-            lastMessages={lastMessages}
-            setLastMessages={setLastMessages}
-            showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
-          />
-          <Chat
-            currentRoom={currentRoom}
-            messages={messages}
-            setMessages={setMessages}
-            showSidebar={showSidebar}
-            setShowSidebar={setShowSidebar}
-          />
-        </div>
-        <Footer />
+    <div className='flex flex-col h-screen w-screen'>
+      <Header />
+      <div className='flex flex-1 overflow-hidden'>
+        <Sidebar
+          currentRoom={currentRoom}
+          setCurrentRoom={setCurrentRoom}
+          lastMessages={lastMessages}
+          setLastMessages={setLastMessages}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
+        <Chat
+          currentRoom={currentRoom}
+          messages={messages}
+          setMessages={setMessages}
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+        />
       </div>
-    </UserContext.Provider>
+      <Footer />
+    </div>
   );
 }

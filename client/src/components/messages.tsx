@@ -1,18 +1,12 @@
 'use client';
 
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-import { UserContext } from '@/app/chat/page';
 import { cn } from '@/utils/helpers/cn';
 import fetcher from '@/utils/helpers/fetcher';
 import formatTime from '@/utils/helpers/formatTime';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 import { ChatObserverTarget } from './chatObserverTarget';
@@ -27,7 +21,7 @@ export function Messages({
   currentRoom: Room | null;
 }) {
   const [limit, setLimit] = useState(1);
-  const user = useContext(UserContext);
+  const { user, loading, error: authError } = useAuth();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error, isLoading } = useSWR(
     currentRoom ? `${API_URL}/messages/${currentRoom._id}/${limit}` : null,

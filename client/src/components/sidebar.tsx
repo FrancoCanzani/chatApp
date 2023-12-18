@@ -1,16 +1,10 @@
 'use client';
 
-import {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-import { UserContext } from '@/app/chat/page';
 import fetcher from '@/utils/helpers/fetcher';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 import CreateRoomForm from './forms/createRoomForm';
@@ -34,7 +28,7 @@ export function Sidebar({
   setShowSidebar: Dispatch<SetStateAction<boolean>>;
 }) {
   const [rooms, setRooms] = useState<Room[]>([]);
-  const user = useContext(UserContext);
+  const { user, loading, error: authError } = useAuth();
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
   const { data, error, isLoading } = useSWR(
     user ? `${API_URL}/rooms/participants/${user.uid}` : null,

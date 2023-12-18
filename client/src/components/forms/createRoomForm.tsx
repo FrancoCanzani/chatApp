@@ -2,11 +2,10 @@
 
 import { ChangeEvent } from 'react';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { useContext } from 'react';
 
-import { UserContext } from '@/app/chat/page';
 import getRooms from '@/utils/helpers/getRooms';
 import handleCreateRoom from '@/utils/helpers/handleCreateRoom';
+import { useAuth } from '@/utils/hooks/useAuth';
 import { NewRoom, Participant, Room, RoomType } from '@/utils/types';
 
 import Button from '../button';
@@ -17,7 +16,7 @@ export default function CreateRoomForm({
   setRooms: Dispatch<SetStateAction<Room[]>>;
 }) {
   const [input, setInput] = useState('');
-  const user = useContext(UserContext);
+  const { user, loading, error: authError } = useAuth();
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setInput(e.target.value);
