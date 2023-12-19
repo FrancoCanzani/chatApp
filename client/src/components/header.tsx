@@ -22,22 +22,15 @@ export default function Header() {
     <header className='flex w-full items-center justify-between px-6 py-4 border-b border-gray-200'>
       <div className='flex items-center justify-center space-x-1'>
         <Image src={'/logo.png'} alt='logo' width={40} height={40} />
-        <h1 className='font-semibold text-zinc-900 dark:text-zinc-50'>
-          Boring Chat
-        </h1>
+        <h1 className='font-semibold text-zinc-900'>Boring Chat</h1>
       </div>
       {user && (
-        <div className='text-sm font-semibold space-x-3'>
-          <span className='bg-gray-50 px-2 py-1 rounded-md'>
-            {user.displayName}
-          </span>
-          <button
-            className='bg-red-100 px-2 py-0.5 hover:bg-red-200 rounded-sm'
-            onClick={handleSignOut}
-          >
-            Sign Out
-          </button>
-        </div>
+        <button
+          className='px-2 py-0.5 hover:bg-red-50 rounded-sm text-xs'
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button>
       )}
     </header>
   );

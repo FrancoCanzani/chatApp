@@ -4,7 +4,6 @@ import { getAuth, GoogleAuthProvider, signInWithRedirect } from 'firebase/auth';
 import { redirect } from 'next/navigation';
 import { toast } from 'sonner';
 
-import { cn } from '@/utils/helpers/cn';
 import { useAuth } from '@/utils/hooks/useAuth';
 
 import { app } from '../../firebase';
@@ -29,18 +28,15 @@ export default function SignIn() {
   return (
     <div className='flex items-center justify-center h-screen w-full space-y-6 flex-col'>
       <div className='space-y-2 text-center'>
-        <h1 className='text-3xl font-bold'>Sign In</h1>
+        <h1 className='text-3xl font-bold'>
+          {loading ? 'Signing in...' : 'Sign In'}
+        </h1>
         <p className='text-gray-500'>Choose your preferred sign-in method</p>
       </div>
-      <div className='rounded-lg border shadow-sm space-y-4 p-4 w-1/2 lg:w-1/4'>
+      <div className='rounded-lg border shadow-sm space-y-4 p-4 w-2/3 sm:w-1/2 lg:w-1/4'>
         <button
           onClick={handleGoogleSignIn}
-          className={cn(
-            'rounded-md text-sm hover:bg-gray-200 font-medium border h-10 px-4 py-2 w-full flex justify-center items-center gap-2',
-            {
-              'animate-pulse': loading,
-            }
-          )}
+          className='rounded-md text-sm hover:bg-gray-200 font-medium border h-10 px-4 py-2 w-full flex justify-center items-center gap-2'
         >
           <svg
             width='20'
@@ -68,14 +64,7 @@ export default function SignIn() {
           </svg>
           Sign in with Google
         </button>
-        <button
-          className={cn(
-            'rounded-md text-sm hover:bg-gray-200 font-medium border h-10 px-4 py-2 w-full flex justify-center items-center gap-2',
-            {
-              'animate-pulse': loading,
-            }
-          )}
-        >
+        <button className='rounded-md text-sm hover:bg-gray-200 font-medium border h-10 px-4 py-2 w-full flex justify-center items-center gap-2'>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             width='20'

@@ -1,6 +1,5 @@
-import { Users2 } from 'lucide-react';
-import { ChevronRight } from 'lucide-react';
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { ChevronRight, UserPlus, Users2, UserX2 } from 'lucide-react';
+import { Dispatch, SetStateAction, useRef } from 'react';
 
 import { cn } from '@/utils/helpers/cn';
 import { useAuth } from '@/utils/hooks/useAuth';
@@ -34,7 +33,7 @@ export default function RoomChatInfo({
   };
 
   return (
-    <div className='flex min-h-[4rem] items-center w-full bg-gray-100 border-b border-b-gray-200'>
+    <div className='flex min-h-[4rem] items-center w-full bg-gray-50 border-b border-b-gray-200'>
       <OpenSidebarButton
         showSidebar={showSidebar}
         setShowSidebar={setShowSidebar}
@@ -44,27 +43,6 @@ export default function RoomChatInfo({
       {currentRoom && (
         <div className='flex-col gap-y-1 min-h-[4rem] flex w-full py-1 px-2 text-center text-xs'>
           <div className='flex items-center justify-between w-full'>
-            <dialog
-              ref={roomDialog}
-              className='p-2 relative rounded-sm items-center justify-start flex-col'
-            >
-              <h3 className='w-full text-lg font-semibold mb-2'>
-                {currentRoom.name}
-              </h3>
-              <div className='flex items-center justify-start w-full space-x-1'>
-                <h4 className='font-medium'>Participants:</h4>
-              </div>
-              <button
-                onClick={closeDialog}
-                aria-label='close dialog'
-                className='absolute right-2 top-2'
-              >
-                X
-              </button>
-              <button className='py-1 px-2 w-full bg-red-100 hover:bg-red-200 rounded-sm mt-2 font-semibold'>
-                Leave room
-              </button>
-            </dialog>
             <button onClick={openDialog} className='text-base hover:underline'>
               {currentRoom.name}
             </button>

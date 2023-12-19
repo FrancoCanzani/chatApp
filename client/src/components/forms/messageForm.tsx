@@ -6,8 +6,6 @@ import { handleSendMessage } from '@/utils/helpers/handleSendMessage';
 import { useAuth } from '@/utils/hooks/useAuth';
 import { Room } from '@/utils/types';
 
-import Button from '../button';
-
 export function MessageForm({ currentRoom }: { currentRoom: Room | null }) {
   const [isLoading, setIsLoading] = useState(false);
   const [input, setInput] = useState('');

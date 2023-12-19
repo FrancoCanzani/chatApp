@@ -24,17 +24,17 @@ export default function UserProfile({
           width={33}
           height={33}
           alt='profile pic'
-          className='rounded-full'
+          className='rounded-md'
         />
         <div className=''>
           <p className='text-sm font-semibold text-gray-800'>
             {user?.displayName}
           </p>
-          <p className='text-[10px] text-gray-600'>{user?.email}</p>
+          <ConnectionState />
         </div>
       </div>
+
       <div className='flex items-center h-full'>
-        <ConnectionState />
         <OpenSidebarButton
           showSidebar={showSidebar}
           setShowSidebar={setShowSidebar}

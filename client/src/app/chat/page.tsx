@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 import Chat from '@/components/chat';
-import Footer from '@/components/footer';
 import Header from '@/components/header';
 import { Sidebar } from '@/components/sidebar';
 import { socket } from '@/socket';
@@ -23,7 +22,7 @@ export default function App() {
   );
   const [showSidebar, setShowSidebar] = useState(true);
 
-  if (!user) {
+  if (!user && !loading) {
     redirect('/');
   }
 
@@ -63,7 +62,7 @@ export default function App() {
   return (
     <div className='flex flex-col h-screen w-screen'>
       <Header />
-      <div className='flex flex-1 overflow-hidden'>
+      <main className='flex flex-1 overflow-hidden'>
         <Sidebar
           currentRoom={currentRoom}
           setCurrentRoom={setCurrentRoom}
@@ -79,8 +78,7 @@ export default function App() {
           showSidebar={showSidebar}
           setShowSidebar={setShowSidebar}
         />
-      </div>
-      <Footer />
+      </main>
     </div>
   );
 }

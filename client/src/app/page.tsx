@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <div className='bg-white flex flex-col justify-between h-screen'>
-      <header className='flex justify-between items-center py-6 px-10'>
+      <header className='flex justify-between items-center py-6 px-3 md:px-10'>
         <div className='flex items-center space-x-1'>
           <Image src={'/logo.png'} alt='logo' width={40} height={40} />
           <span className='font-semibold text-gray-700 text-xl'>
@@ -30,13 +30,11 @@ export default function Home() {
           Sign in
         </Link>
       </header>
-      <main className='px-6 pb-16 text-center leading-loose'>
-        <Balancer>
-          <h1 className='text-5xl md:text-6xl xl:text-7xl font-bold mb-6'>
-            Simplified Chatting. Back to Basics{' '}
-          </h1>
-        </Balancer>
-        <p className='text-lg text-gray-600 mb-8'>
+      <main className='px-3 pb-16 text-center leading-loose'>
+        <h1 className='text-4xl sm:text-5xl md:text-6xl xl:text-7xl font-bold mb-6'>
+          Simplified Chatting. Back to Basics{' '}
+        </h1>
+        <p className='text-base md:text-lg text-gray-600 mb-8'>
           Rediscover the joy of simple, straightforward{' '}
           <span className='underline'>messaging</span>
         </p>
@@ -47,7 +45,14 @@ export default function Home() {
           >
             Start for free
           </Link>
-          <button className='hover:underline'>Contribute ↗</button>
+          <a
+            className='hover:underline'
+            href='https://github.com/FrancoCanzani/chatApp'
+            target='_blank'
+            rel='noreferrer'
+          >
+            Contribute ↗
+          </a>
         </div>
       </main>
       <footer className='flex items-center py-4 bg-gray-700 justify-center w-full'>

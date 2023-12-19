@@ -6,8 +6,6 @@ export const roomsRouter = Router();
 roomsRouter.get('/rooms/participants/:participantId', async (req, res) => {
   const participantId = req.params.participantId;
 
-  // Todo: add validation for participantId here
-
   try {
     const rooms = await Room.find({ 'participants.id': participantId });
 
@@ -36,6 +34,9 @@ roomsRouter.post('/rooms', async (req, res) => {
       createdBy: creatorUid,
       createdAt: new Date(),
     });
+
+    // Generate a unique join link
+    newRoom.generateJoinLink();
 
     await newRoom.save();
 
@@ -98,12 +99,43 @@ roomsRouter.patch('/rooms/:roomId/participants', async (req, res) => {
   }
 
   try {
-    await Room.updateOne(
-      { _id: roomId },
-      { $addToSet: { participants: participant } }
+    const room = await Room.findById(roomId);
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    // Check if the participant is already in the room
+    const isParticipantExists = room.participants.some(
+      (part) => part.id === participant.id
     );
 
+    if (isParticipantExists) {
+      return res
+        .status(409)
+        .json({ message: 'Participant already exists in the room' });
+    }
+
+    // Add the participant to the room
+    room.participants.push(participant);
+    await room.save();
+
     res.status(200).json({ message: 'Participant added successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+roomsRouter.get('/join/:joinLink', async (req, res) => {
+  const joinLink = req.params.joinLink;
+
+  try {
+    const room = await Room.findOne({ joinLink });
+    if (!room) {
+      return res.status(404).json({ error: 'Invalid link' });
+    }
+
+    res.status(200).json({ message: 'Joined room successfully', room });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
