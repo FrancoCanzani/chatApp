@@ -13,7 +13,12 @@ export default function SignIn() {
   const auth = getAuth(app);
   const { user, loading, error } = useAuth();
 
-  if (user) {
+  const redirectTo = sessionStorage.getItem('redirectToAfterAuth');
+
+  if (user && redirectTo) {
+    redirect(`/join?room=${redirectTo}`);
+    sessionStorage.removeItem('redirectToAfterAuth');
+  } else if (user) {
     redirect('/chat');
   }
 

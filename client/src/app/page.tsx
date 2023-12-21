@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import Balancer from 'react-wrap-balancer';
 
 import { app } from '../firebase';
 

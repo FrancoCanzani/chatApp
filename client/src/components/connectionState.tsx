@@ -8,7 +8,7 @@ export function ConnectionState() {
 
   return (
     <p
-      className={cn('text-xs text-gray-800', {
+      className={cn('text-[0.7rem] text-gray-800', {
         'text-gray-500': !isConnected,
       })}
     >

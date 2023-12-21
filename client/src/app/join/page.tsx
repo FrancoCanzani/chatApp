@@ -12,7 +12,7 @@ import { useAuth } from '@/utils/hooks/useAuth';
 import { Participant } from '@/utils/types';
 
 export default function Page() {
-  const { user, loading, error } = useAuth();
+  const { user, loading } = useAuth();
   const searchParams = useSearchParams();
   const joinLink = searchParams.get('room');
   const router = useRouter();
@@ -28,6 +28,7 @@ export default function Page() {
       sessionStorage.setItem('redirectToAfterAuth', joinLink);
     }
     redirect('/signIn');
+    return;
   }
 
   async function handleJoinRoom(roomId: string, participant: Participant) {
@@ -43,7 +44,7 @@ export default function Page() {
       if (res.ok) {
         router.push('/chat');
       } else {
-        const errorData = await res.json(); // Get error details from response
+        const errorData = await res.json();
         if (res.status === 409) {
           // Check if the status code is 409 (Conflict)
           router.push('/chat');
@@ -57,26 +58,26 @@ export default function Page() {
   }
 
   return (
-    <div className='flex items-center justify-center h-screen w-full'>
-      <main className='flex items-center flex-col justify-center space-y-8 border shadow-sm rounded-lg p-4 w-2/3 sm:w-1/2 lg:w-1/4'>
-        <div className='flex items-center justify-center space-x-1'>
+    <div className='flex bg-gray-100 items-center justify-center h-screen w-full'>
+      <main className='flex items-center bg-white flex-col justify-center space-y-4 border shadow-sm rounded-lg p-4 w-2/3 sm:w-1/2 lg:w-1/4'>
+        <div className='flex items-center justify-center space-x-0.5 mb-2'>
           <Image src={'/logo.png'} alt='logo' width={40} height={40} />
           <h1 className='font-semibold text-zinc-900'>Boring Chat</h1>
         </div>
-        <div className='flex items-center justify-evenly w-full p-6'>
+        <div className='flex items-center justify-evenly w-full'>
           <Image
             src={user?.photoURL ?? '/pic-placeholder.jpg'}
-            height={65}
-            width={65}
+            height={45}
+            width={45}
             alt='profile pic'
-            className='rounded-full shadow-md'
+            className='rounded-full shadow-sm z-10 -mr-16'
           />
           <svg
             xmlns='http://www.w3.org/2000/svg'
-            width='4em'
-            height='4em'
+            width='45'
+            height='45'
             viewBox='0 0 24 24'
-            className='rounded-full shadow-md p-1'
+            className='rounded-full shadow-sm p-1 bg-white -ml-16'
           >
             <g fill='none'>
               <path
@@ -88,24 +89,25 @@ export default function Page() {
             </g>
           </svg>
         </div>
-        <div className='p-6 flex flex-col items-center space-y-4'>
-          <h3 className='tracking-tight text-xl font-bold'>
-            You&apos;re Invited!
-          </h3>
-          <p className='text-sm text-gray-500'>
-            You have been invited to join <strong>{data?.room.name}</strong>
+        <div className='p-3 flex flex-col items-center space-y-3'>
+          <h3 className='text-xl font-bold'>You&apos;re Invited!</h3>
+          <p className='text-sm text-gray-500 text-center'>
+            You have been invited to
+            <strong className='text-black'> {data?.room.name}</strong>
+            <br />
+            Would you like to join?
           </p>
           <div className='flex items-center space-x-3 py-3'>
             <button
               onClick={() => {
                 router.push('/chat');
               }}
-              className='flex items-center justify-center rounded-md text-sm font-medium p-2 bg-red-100 text-red-600'
+              className='flex items-center justify-center rounded-md text-xs font-medium p-2 bg-red-100 text-red-600 hover:bg-red-200'
             >
-              Reject Invite
+              Reject invite
             </button>
             <button
-              className='flex items-center justify-center rounded-md text-sm font-medium p-2 bg-green-100 text-green-600'
+              className='flex items-center justify-center rounded-md text-xs font-medium p-2 bg-green-100 text-green-600 hover:bg-green-200'
               onClick={() => {
                 if (user) {
                   const participant: Participant = {
@@ -118,7 +120,7 @@ export default function Page() {
                 }
               }}
             >
-              Accept Invite
+              Confirm
             </button>
           </div>
         </div>

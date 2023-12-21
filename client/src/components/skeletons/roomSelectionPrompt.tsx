@@ -14,7 +14,7 @@ export function RoomSelectionPrompt({
         showSidebar
           ? 'hidden md:flex md:w-3/4 sm:w-3/5 w-full'
           : 'md:w-3/4 sm:w-3/5 min-w-0 w-full'
-      } overflow-hidden min-h-full flex justify-center items-center flex-col`}
+      } overflow-hidden min-h-full bg-gray-100 flex justify-center items-center flex-col`}
     >
       <Image
         src={'/boring_sloth.png'}

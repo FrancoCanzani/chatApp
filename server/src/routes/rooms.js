@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { Room } from '../db/schemas/roomSchema.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export const roomsRouter = Router();
 
@@ -136,6 +137,29 @@ roomsRouter.get('/join/:joinLink', async (req, res) => {
     }
 
     res.status(200).json({ message: 'Joined room successfully', room });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+roomsRouter.patch('/rooms/:roomId/joinLink', async (req, res) => {
+  const roomId = req.params.roomId;
+
+  try {
+    const room = await Room.findById(roomId);
+    if (!room) {
+      return res.status(404).json({ error: 'Room not found' });
+    }
+
+    const newJoinLink = uuidv4().toString().replaceAll('-', '');
+
+    room.joinLink = newJoinLink;
+    await room.save();
+
+    res
+      .status(200)
+      .json({ message: 'Join link updated successfully', newJoinLink });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });

@@ -1,46 +1,34 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import useSWR from 'swr';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
-import fetcher from '@/utils/helpers/fetcher';
-import { useAuth } from '@/utils/hooks/useAuth';
 import { Message, Room } from '@/utils/types';
 
 import CreateRoomForm from './forms/createRoomForm';
-import JoinRoomForm from './forms/joinRoomForm';
 import Rooms from './rooms';
 import UserProfile from './userProfile';
 
-export function Sidebar({
-  currentRoom,
-  setCurrentRoom,
-  lastMessages,
-  setLastMessages,
-  showSidebar,
-  setShowSidebar,
-}: {
+interface SidebarProps {
+  rooms: Room[];
+  setRooms: Dispatch<SetStateAction<Room[]>>;
   currentRoom: Room | null;
   setCurrentRoom: Dispatch<SetStateAction<Room | null>>;
   lastMessages: { [key: string]: Message };
   setLastMessages: Dispatch<SetStateAction<{ [key: string]: Message }>>;
   showSidebar: boolean;
   setShowSidebar: Dispatch<SetStateAction<boolean>>;
-}) {
-  const [rooms, setRooms] = useState<Room[]>([]);
-  const { user, loading, error: authError } = useAuth();
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const { data, error, isLoading } = useSWR(
-    user ? `${API_URL}/rooms/participants/${user.uid}` : null,
-    fetcher
-  );
+}
 
-  useEffect(() => {
-    if (data) {
-      setRooms(data);
-    }
-  }, [user, data]);
-
+export function Sidebar({
+  rooms,
+  setRooms,
+  currentRoom,
+  setCurrentRoom,
+  lastMessages,
+  setLastMessages,
+  showSidebar,
+  setShowSidebar,
+}: SidebarProps) {
   // Effect for automatically closing the sidebar when the current room changes
   useEffect(() => {
     if (currentRoom) {
@@ -54,11 +42,10 @@ export function Sidebar({
         showSidebar
           ? 'flex w-full md:w-2/5 lg:w-1/4 '
           : 'hidden w-0 sm:w-2/5 lg:w-1/4 sm:flex'
-      } relative border-x flex-col border-gray-200 overflow-auto`}
+      } relative flex-col overflow-auto`}
     >
       <UserProfile showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
       <CreateRoomForm setRooms={setRooms} />
-      <JoinRoomForm setRooms={setRooms} />
       <Rooms
         currentRoom={currentRoom}
         rooms={rooms}

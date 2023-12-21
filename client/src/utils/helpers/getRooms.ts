@@ -1,15 +1,17 @@
+import { toast } from 'sonner';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default async function getRooms(userId: string) {
   try {
-    const res = await fetch(
-      `http://localhost:3000/rooms/participants/${userId}`
-    );
+    const res = await fetch(`${API_URL}/rooms/participants/${userId}`);
     if (res.ok) {
       const rooms = await res.json();
       return rooms;
     }
     return [];
   } catch (error) {
-    console.error(error);
+    toast.error('There was an error loading Rooms. Please try again!');
     return [];
   }
 }

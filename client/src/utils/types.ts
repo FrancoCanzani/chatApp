@@ -22,6 +22,7 @@ interface Room {
   participants: Participant[]; // Array of participant IDs
   administrators: string[]; // Array of administrator IDs
   createdBy: string; // Creator ID
+  joinLink: string;
   createdAt: Date;
   updatedAt: Date;
   _id: string;
