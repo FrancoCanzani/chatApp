@@ -1,9 +1,10 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { Message, Room } from '@/utils/types';
 
+import Dialog from './dialog';
 import CreateRoomForm from './forms/createRoomForm';
 import Rooms from './rooms';
 import UserProfile from './userProfile';
@@ -29,7 +30,8 @@ export function Sidebar({
   showSidebar,
   setShowSidebar,
 }: SidebarProps) {
-  // Effect for automatically closing the sidebar when the current room changes
+  const [showDialog, setShowDialog] = useState(false);
+
   useEffect(() => {
     if (currentRoom) {
       setShowSidebar(false);
@@ -42,17 +44,37 @@ export function Sidebar({
         showSidebar
           ? 'flex w-full md:w-2/5 lg:w-1/4 '
           : 'hidden w-0 sm:w-2/5 lg:w-1/4 sm:flex'
-      } relative flex-col overflow-auto`}
+      } relative flex-col overflow-auto justify-between`}
     >
+      <div>
+        <div className='flex items-center justify-between p-2'>
+          <h2 className='leading-7 text-gray-800 font-semibold text-sm'>
+            Chat Rooms
+          </h2>
+          <button
+            className='rounded-md text-xs border hover:bg-gray-50 p-2'
+            aria-haspopup='dialog'
+            onClick={() => setShowDialog(!showDialog)}
+          >
+            New Room
+          </button>
+          <Dialog
+            showDialog={showDialog}
+            setShowDialog={setShowDialog}
+            className='p-2 rounded-md min-w-[23rem]'
+          >
+            <CreateRoomForm setRooms={setRooms} setShowDialog={setShowDialog} />
+          </Dialog>
+        </div>
+        <Rooms
+          currentRoom={currentRoom}
+          rooms={rooms}
+          setCurrentRoom={setCurrentRoom}
+          lastMessages={lastMessages}
+          setLastMessages={setLastMessages}
+        />
+      </div>
       <UserProfile showSidebar={showSidebar} setShowSidebar={setShowSidebar} />
-      <CreateRoomForm setRooms={setRooms} />
-      <Rooms
-        currentRoom={currentRoom}
-        rooms={rooms}
-        setCurrentRoom={setCurrentRoom}
-        lastMessages={lastMessages}
-        setLastMessages={setLastMessages}
-      />
     </aside>
   );
 }

@@ -30,7 +30,7 @@ interface Room {
 
 type NewRoom = Omit<
   Room,
-  'createdAt' | 'updatedAt' | '_id' | 'name' | 'type' | 'createdBy'
+  'createdAt' | 'updatedAt' | '_id' | 'name' | 'type' | 'createdBy' | 'joinLink'
 > & {
   name: string;
   type: 'private' | 'group';
